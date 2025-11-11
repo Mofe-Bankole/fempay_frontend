@@ -2,8 +2,9 @@ import { AxiosInstance } from "axios";
 
 type AuthUser = {
   id: string;
+  signed_in : Date;
   email: string;
-  name?: string;
+  user_name?: string;
   [key: string]: any;
 };
 
@@ -22,7 +23,7 @@ type SignUpInput = {
 };
 
 type SignInInput = {
-    phone : string,
+  phone : string,
   password: string;
 };
 
@@ -38,4 +39,4 @@ type AuthContextValue = {
   client: AxiosInstance;
 };
 
-export type { AuthUser, Session, SignUpInput, SignInInput, AuthContextValue };
+export type { AuthContextValue, AuthUser, Session, SignInInput, SignUpInput };

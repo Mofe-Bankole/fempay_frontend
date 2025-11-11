@@ -1,6 +1,7 @@
 import { AuthContextValue, Session, SignInInput, SignUpInput } from '@/types/types';
 import axios from 'axios';
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 const API_BASE_URL = 'http://localhost:78753';
