@@ -44,6 +44,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           ...data,
         };
         setSession(nextSession);
+        localStorage.setItem(`fempay_user_session_${nextSession.accessToken}`, nextSession.accessToken as string)
         setAuthHeader(nextSession.accessToken);
         return nextSession;
       } catch (e: any) {
@@ -70,6 +71,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           ...data,
         };
         setSession(nextSession);
+        localStorage.setItem(`fempay_user_session_${nextSession.accessToken}`, nextSession.accessToken as string)
         setAuthHeader(nextSession.accessToken);
         return nextSession;
       } catch (e: any) {
@@ -87,8 +89,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(true);
     setError(undefined);
     try {
-      // Optional: call a signout endpoint if backend supports it
-      // await client.post('/signout');
+      /// signout done later
     } catch {
       // ignore network errors on signout
     } finally {
@@ -165,6 +166,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 export function useAuth() {
   const ctx = useContext(AuthContext);
+
   if (!ctx) {
     throw new Error('useAuth must be used within AuthProvider');
   }
