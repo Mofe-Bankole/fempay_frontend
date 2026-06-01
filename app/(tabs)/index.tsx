@@ -23,11 +23,11 @@ export default function WelcomeOne() {
 
         <button
           onClick={() => router.push("/(pages)/welcome/two")}
-          className="mb-5 w-full py-6 rounded-2xl text-xl bg-purple-500 text-white"
+          className="mb-5 w-full py-6 rounded-2xl bg-purple-500 flex items-center justify-center"
         >
-          <View className="flex flex-row w-1/2 mx-auto">
-            <p>Get Started</p>
-            <ArrowRight />
+          <View className="flex-row items-center justify-center gap-2">
+            <Text className="text-xl text-white">Get Started</Text>
+            <ArrowRight color="white" />
           </View>
         </button>
       </View>

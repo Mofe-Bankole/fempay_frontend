@@ -23,11 +23,11 @@ export default function WelcomeTwo() {
 
         <button
           onClick={() => router.push("/(pages)/welcome/three")}
-          className="mb-5 flex w-[100%] mx-auto py-6 rounded-2xl text-xl relative bg-purple-500 text-white"
+          className="mb-5 w-full py-6 rounded-2xl bg-purple-500 flex items-center justify-center"
         >
-          <View className="text-center flex flex-row">
-            <p>Next</p>
-            <ArrowRight />
+          <View className="flex-row items-center justify-center gap-2">
+            <Text className="text-xl text-white">Next</Text>
+            <ArrowRight color="white" />
           </View>
         </button>
         {/*<Link href={"/(pages)/welcome/two"} className="text-purple-300 text-">

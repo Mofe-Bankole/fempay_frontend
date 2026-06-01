@@ -43,6 +43,7 @@ const C = {
   greenMuted: "rgba(74,222,128,0.15)",
   gold: "#F59E0B",
   goldMuted: "rgba(245,158,11,0.15)",
+  contrast_text: "#000000",
   text: "#FFFFFF",
   textSub: "#9090A8",
   textDim: "#5A5A72",
@@ -148,7 +149,7 @@ export default function HomeScreen() {
         style={styles.scroll}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
-        className="bg-white"
+        className="bg-teal-50"
       >
         {/* ── Hero card ── */}
         <View style={styles.hero} className="bg-[#0A0320]">
@@ -192,7 +193,7 @@ export default function HomeScreen() {
             </View>
 
             <View style={styles.balanceRow}>
-              <Text style={styles.balanceAmount}>#100,000</Text>
+              <Text style={styles.balanceAmount}>#30,000</Text>
               <TouchableOpacity style={styles.eyeBtn} activeOpacity={0.7}>
                 <Wallet size={16} color={C.textSub} strokeWidth={1.8} />
               </TouchableOpacity>
@@ -200,11 +201,11 @@ export default function HomeScreen() {
 
             {/* Progress bar */}
             <View style={styles.progressBarBg}>
-              <View style={[styles.progressBarFill, { width: "0%" }]} />
+              <View style={[styles.progressBarFill, { width: "30%" }]} />
             </View>
 
             <View style={styles.progressMeta}>
-              <Text style={styles.progressPct}>0% Spent</Text>
+              <Text style={styles.progressPct}>30% Spent</Text>
               <Text style={styles.progressAllowance}>#100,000 allowance</Text>
             </View>
           </View>
@@ -547,7 +548,7 @@ const styles = StyleSheet.create({
   nudgeTitle: {
     fontSize: 14,
     fontWeight: "700",
-    color: C.text,
+    color: C.contrast_text,
   },
   nudgeSub: {
     fontSize: 12,
@@ -598,7 +599,7 @@ const styles = StyleSheet.create({
   recentTitle: {
     fontSize: 16,
     fontWeight: "700",
-    color: C.text,
+    color: C.contrast_text,
   },
   viewAllBtn: {
     flexDirection: "row",
