@@ -3,9 +3,10 @@ module.exports = {
   darkMode: ["class"],
   // NOTE: Update this to include the paths to all files that contain Nativewind classes.
   content: [
+    // Scan every source file inside the app folder (including nested folders)
     "./app/**/*.{js,jsx,ts,tsx}",
+    // Scan every component file
     "./components/**/*.{js,jsx,ts,tsx}",
-    "./app/(pages)/*.{js,jsx,ts,tsx}",
   ],
   presets: [require("nativewind/preset")],
   theme: {
