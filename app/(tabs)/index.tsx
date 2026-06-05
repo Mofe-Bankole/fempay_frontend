@@ -1,39 +1,5 @@
-import { View, Image, Text } from "react-native";
-import "../../global.css";
-import { ArrowRight } from "lucide-react";
-import { Link, useRouter } from "expo-router";
+import { Redirect } from "expo-router";
 
-export default function WelcomeOne() {
-  const router = useRouter();
-
-  return (
-    <div className="min-h-screen bg-[#0A0320] flex flex-col items-center justify-center">
-      {/* Your page content */}
-      <Image
-        source={require("../../public/images/rafiki.png")}
-        className="mb-[1.2rem]"
-      />
-      <View className="mx-auto text-center items-center px-5">
-        <h1 className="text-white text-4xl text-center mb-4 font-bold">
-          Welcome to the Future of Smart Finance{" "}
-        </h1>
-        <p className="text-white text-center text-[15px] mb-14">
-          FemPay - Your campus financial companion
-        </p>
-
-        <button
-          onClick={() => router.push("/(pages)/welcome/two")}
-          className="mb-5 w-full py-6 rounded-2xl bg-purple-500 flex items-center justify-center"
-        >
-          <View className="flex-row items-center justify-center gap-2">
-            <Text className="text-xl text-white">Get Started</Text>
-            <ArrowRight color="white" />
-          </View>
-        </button>
-      </View>
-      <Link href={"/(pages)/welcome/two"} className="text-purple-300 text-">
-        I already have an account | Login
-      </Link>
-    </div>
-  );
+export default function TabsIndex() {
+  return <Redirect href="/(pages)/welcome/one" />;
 }
