@@ -27,7 +27,9 @@ import {
   Home,
   Tag,
   Wallet,
+  Eye,
 } from "lucide-react";
+import { useStateForPath } from "@react-navigation/native";
 
 const { width } = Dimensions.get("window");
 
@@ -133,7 +135,10 @@ function XPCard({
 
 export default function HomeScreen() {
   const [activeTab, setActiveTab] = useState("Home");
-
+  const [hiddenbalance, sethiddenBalance] = useState(false);
+  const hideBalance = function () {
+    sethiddenBalance(!hiddenbalance);
+  };
   const tabs = [
     { label: "Home", icon: Home },
     { label: "Offers", icon: Tag },
@@ -193,9 +198,16 @@ export default function HomeScreen() {
             </View>
 
             <View style={styles.balanceRow}>
-              <Text style={styles.balanceAmount}>#30,000</Text>
+              <Text style={styles.balanceAmount}>
+                {hiddenbalance ? "*****" : "#30000"}
+              </Text>
               <TouchableOpacity style={styles.eyeBtn} activeOpacity={0.7}>
-                <Wallet size={16} color={C.textSub} strokeWidth={1.8} />
+                <Eye
+                  size={16}
+                  color={C.textSub}
+                  strokeWidth={1.8}
+                  onClick={() => hideBalance()}
+                />
               </TouchableOpacity>
             </View>
 

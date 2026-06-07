@@ -11,6 +11,18 @@ module.exports = {
   presets: [require("nativewind/preset")],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["Inter_400Regular"],
+        thin: ["Inter_100Thin"],
+        extralight: ["Inter_200ExtraLight"],
+        light: ["Inter_300Light"],
+        normal: ["Inter_400Regular"],
+        medium: ["Inter_500Medium"],
+        semibold: ["Inter_600SemiBold"],
+        bold: ["Inter_700Bold"],
+        extrabold: ["Inter_800ExtraBold"],
+        black: ["Inter_900Black"],
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",

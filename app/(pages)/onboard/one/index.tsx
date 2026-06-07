@@ -6,43 +6,47 @@ import { useRouter } from "expo-router";
 export default function OnboardOne() {
   const router = useRouter();
   return (
-    <View className="min-h-screen bg-[#0A0320] flex flex-col text-white px-6 py-4">
-      <View className="flex flex-row items-start space-x-3 mb-12">
-        <TouchableOpacity onPress={() => router.back()} className="mt-1">
-          <ArrowLeft size={24} color="white" />
-        </TouchableOpacity>
-        <View className="flex-1">
-          <Text className="text-white text-[1.5rem]">
-            Student - Step 1 of 5
-          </Text>
-          <View className="w-3/5 h-1.5 bg-white/20 rounded-full mt-2">
-            <View className="w-[20%] h-full bg-[#7C3AED] rounded-full" />
+    <View className="min-h-screen justify-between bg-[#0A0320] flex flex-col text-white px-8 py-4">
+      <View className="flex flex-col">
+        <View className="flex flex-row items-start space-x-3 mb-12">
+          <TouchableOpacity onPress={() => router.back()} className="mt-1">
+            <ArrowLeft size={24} color="white" />
+          </TouchableOpacity>
+          <View className="flex-1">
+            <Text className="text-white text-[1.5rem]">
+              Student - Step 1 of 5
+            </Text>
+            <View className="w-5/5 h-1.5 bg-white rounded-full mt-2">
+              <View className="w-[20%] h-full bg-[#7C3AED] rounded-full" />
+            </View>
+          </View>
+        </View>
+        <View className="space-y-6">
+          <View className="bg-[rgba(124,58,237,0.3)] w-16 h-16 items-center justify-center rounded-2xl">
+            <Phone size={24} color="#7C3AED" />
+          </View>
+
+          <View>
+            <Text className="text-white text-3xl mb-2 font-bold">
+              Phone Number
+            </Text>
+            <Text className="text-sm text-gray-500">
+              We&apos;ll send you a verification code
+            </Text>
+          </View>
+
+          <View className="flex flex-col">
+            <Text className="text-[0.9rem] text-white font-bold">
+              Mobile Number
+            </Text>
           </View>
         </View>
       </View>
 
-      <View className="space-y-6">
-        <View className="bg-[rgba(124,58,237,0.3)] w-16 h-16 items-center justify-center rounded-2xl">
-          <Phone size={24} color="#7C3AED" />
-        </View>
-
-        <View>
-          <Text className="text-white text-3xl mb-2 font-bold">
-            Phone Number
-          </Text>
-          <Text className="text-sm text-gray-500">
-            We&apos;ll send you a verification code
-          </Text>
-        </View>
-
-        <View className="flex flex-col">
-          <Text className="text-[0.9rem] text-white font-bold">
-            Mobile Number
-          </Text>
-        </View>
-      </View>
-
-      <TouchableOpacity className="rounded-lg bg-purple-600 py-4 items-center justify-center w-full mt-[70.5%]">
+      <TouchableOpacity
+        onPress={() => router.push("/(pages)/onboard/three")}
+        className="rounded-lg bg-purple-600 py-4 items-center justify-center w-full"
+      >
         <Text className="text-white text-[1rem] font-bold">Send OTP</Text>
       </TouchableOpacity>
     </View>
