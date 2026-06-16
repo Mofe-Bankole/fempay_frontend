@@ -71,7 +71,10 @@ export default function OnboardFour() {
         </View>
       </View>
 
-      <TouchableOpacity className="rounded-lg bg-purple-600 py-4 items-center justify-center w-full">
+      <TouchableOpacity
+        className="rounded-lg bg-purple-600 py-4 items-center justify-center w-full"
+        onPress={() => router.push("/(pages)/onboard/five")}
+      >
         <Text className="text-white text-[1rem] font-bold">Next</Text>
       </TouchableOpacity>
     </View>

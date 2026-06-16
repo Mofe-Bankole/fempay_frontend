@@ -44,7 +44,7 @@ export default function OnboardOne() {
       </View>
 
       <TouchableOpacity
-        onPress={() => router.push("/(pages)/onboard/three")}
+        onPress={() => router.push("/(pages)/onboard/two")}
         className="rounded-lg bg-purple-600 py-4 items-center justify-center w-full"
       >
         <Text className="text-white text-[1rem] font-bold">Send OTP</Text>

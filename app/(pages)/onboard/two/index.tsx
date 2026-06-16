@@ -30,8 +30,8 @@ export default function OnboardOne() {
           </View>
         </View>
         <View className="space-y-6">
-          <View className="bg-[#22C55E] opacity-30 w-16 h-16 items-center justify-center rounded-2xl">
-            <User size={24} color="#22C55E" className="opacity-20" />
+          <View className="w-16 h-16 items-center justify-center rounded-2xl bg-[#22C55E]/20">
+            <User size={24} color="#22C55E" />
           </View>
 
           <View>
@@ -94,28 +94,28 @@ export default function OnboardOne() {
               className="px-5 py-3 border border-[2.5px] border-purple-500 outline-none rounded-xl"
             />
           </View>
-          <View className="flex flex-row space-x-5 income_buttons justify-between">
-            <View className="border border-purple-500 py-3 px-4 rounded-lg">
-              <Text className="text-white">30,000</Text>
+          <View className="flex flex-row income_buttons grid grid-cols-2 gap-y-4 gap-x-4">
+            <View className="border border-purple-500 py-3 px-4 rounded-lg text-center">
+              <Text className="text-white text-center">30,000</Text>
             </View>
-            <View className="border border-purple-500 py-3 px-4 rounded-lg">
-              <Text className="text-white">30,000</Text>
+            <View className="border border-purple-500 py-3 px-4 rounded-lg text-center">
+              <Text className="text-white text-center">30,000</Text>
             </View>
-            <View className="border border-purple-500 py-3 px-4 rounded-lg">
-              <Text className="text-white">30,000</Text>
+            <View className="border border-purple-500 py-3 px-4 rounded-lg text-center">
+              <Text className="text-white text-center">30,000</Text>
             </View>
-            <View className="border border-purple-500 py-3 px-4 rounded-lg">
-              <Text className="text-white">30,000</Text>
+            <View className="border border-purple-500 py-3 px-4 rounded-lg text-center">
+              <Text className="text-white text-center">30,000</Text>
             </View>
           </View>
         </View>
       </View>
 
       <TouchableOpacity
-        onPress={() => router.push("/(pages)/onboard/three")}
+        onPress={() => router.push("/(pages)/onboard/four")}
         className="rounded-lg bg-purple-600 py-4 mt-4 items-center justify-center w-full"
       >
-        <Text className="text-white text-[1rem] font-bold">Send OTP</Text>
+        <Text className="text-white text-[1rem] font-bold">Next</Text>
       </TouchableOpacity>
     </ScrollView>
   );
