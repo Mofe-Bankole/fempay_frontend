@@ -29,7 +29,8 @@ import {
   Wallet,
   Eye,
 } from "lucide-react";
-import { useStateForPath } from "@react-navigation/native";
+import { useRouter } from "expo-router";
+import { useTransferStore } from "../../../store/transfer";
 
 const { width } = Dimensions.get("window");
 
@@ -134,6 +135,8 @@ function XPCard({
 // ─── Main Screen ─────────────────────────────────────────────────
 
 export default function HomeScreen() {
+  const router = useRouter();
+  const resetTransfer = useTransferStore((s) => s.reset);
   const [activeTab, setActiveTab] = useState("Home");
   const [hiddenbalance, sethiddenBalance] = useState(false);
   const hideBalance = function () {
@@ -224,7 +227,14 @@ export default function HomeScreen() {
 
           {/* Quick actions */}
           <View style={styles.quickActions}>
-            <QuickActionButton icon={Send} label="Send" />
+            <QuickActionButton
+              icon={Send}
+              label="Send"
+              onPress={() => {
+                resetTransfer();
+                router.push("/transfer/page" as any);
+              }}
+            />
             <QuickActionButton icon={QrCode} label="Pay" />
             <QuickActionButton icon={Phone} label="Airtime" />
             <QuickActionButton icon={FileText} label="Bills" />
