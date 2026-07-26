@@ -2,6 +2,8 @@ import { View, Text, TouchableOpacity } from "react-native";
 import "../../../../global.css";
 import { ArrowLeft, Phone } from "lucide-react";
 import { useRouter } from "expo-router";
+import { LabelText } from "../identity-verification";
+import { TextInput } from "react-native";
 
 export default function OnboardOne() {
   const router = useRouter();
@@ -36,15 +38,21 @@ export default function OnboardOne() {
           </View>
 
           <View className="flex flex-col">
-            <Text className="text-[0.9rem] text-white font-bold">
+            <Text className="text-[0.9rem] text-white font-bold mb-4">
               Mobile Number
             </Text>
+            <View className="flex flex-col space-y-2">
+              <TextInput
+                placeholder="James Gray"
+                className="px-5 py-3 border border-[2.5px] border-purple-500 outline-none rounded-xl"
+              />
+            </View>
           </View>
         </View>
       </View>
 
       <TouchableOpacity
-        onPress={() => router.push("/(pages)/onboard/two")}
+        onPress={() => router.push("/(pages)/onboard/identity-verification")}
         className="rounded-lg bg-purple-600 py-4 items-center justify-center w-full"
       >
         <Text className="text-white text-[1rem] font-bold">Send OTP</Text>

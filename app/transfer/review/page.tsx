@@ -155,7 +155,7 @@ export default function ReviewPage() {
       </ScrollView>
 
       {/* Confirm button */}
-      <View className="px-5 pb-[34px] pt-3 bg-[#F2F2F7]">
+      <View className="px-5 pb-[34px] pt-3  bg-[#F2F2F7]">
         <TouchableOpacity
           activeOpacity={0.85}
           onPress={() => setShowPinPad(true)}

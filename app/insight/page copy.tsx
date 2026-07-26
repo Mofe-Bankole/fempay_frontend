@@ -87,7 +87,7 @@ export default function SendMoneyScreen() {
 
       {/* Tabs */}
       <View className="flex-row bg-[#e2e2e8] rounded-2xl mx-5 mb-5 p-[3px]">
-        <TouchableOpacityhom
+        <TouchableOpacity
           className={`flex-1 py-3 items-center rounded-xl ${activeTab === "bank" ? "bg-white shadow-sm" : ""}`}
           onPress={() => setActiveTab("bank")}
           activeOpacity={0.8}
