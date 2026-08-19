@@ -40,7 +40,7 @@ const { width } = Dimensions.get("window");
 
 // ─── Colour tokens ───────────────────────────────────────────────
 const C = {
-  bg: "#0E0E14",
+  bg: "#F5F6F8",
   card: "#16161F",
   cardBorder: "#2A2A38",
   purple: "#7C5CFC",
@@ -164,7 +164,6 @@ export default function HomeScreen() {
         style={styles.scroll}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
-        className="bg-teal-50"
       >
         {/* ── Hero card ── */}
         <View style={styles.hero} className="bg-[#0A0320]">
@@ -385,7 +384,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: C.bg,
+    backgroundColor: "#F5F6F8",
   },
   scroll: {
     flex: 1,
