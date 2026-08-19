@@ -425,6 +425,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   greetingSmall: {
+    fontFamily: "Inter_400Regular",
     fontSize: 12,
     color: C.textSub,
     fontWeight: "400",
@@ -436,6 +437,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   greetingName: {
+    fontFamily: "Inter_700Bold",
     fontSize: 16,
     fontWeight: "700",
     color: C.text,
@@ -452,6 +454,7 @@ const styles = StyleSheet.create({
     borderColor: "rgba(34,197,94,0.25)",
   },
   verifiedText: {
+    fontFamily: "Inter_600SemiBold",
     fontSize: 10,
     color: C.verified,
     fontWeight: "600",
@@ -486,11 +489,13 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   walletLabel: {
+    fontFamily: "Inter_500Medium",
     fontSize: 12,
     color: C.textSub,
     fontWeight: "500",
   },
   walletId: {
+    fontFamily: "Inter_400Regular",
     fontSize: 12,
     color: C.textSub,
     fontWeight: "400",
@@ -502,6 +507,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   balanceAmount: {
+    fontFamily: "Inter_800ExtraBold",
     fontSize: 30,
     fontWeight: "800",
     color: C.text,
@@ -527,10 +533,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   progressPct: {
+    fontFamily: "Inter_400Regular",
     fontSize: 11,
     color: C.textSub,
   },
   progressAllowance: {
+    fontFamily: "Inter_400Regular",
     fontSize: 11,
     color: C.textSub,
   },
@@ -555,6 +563,7 @@ const styles = StyleSheet.create({
     borderColor: C.cardBorder,
   },
   quickActionLabel: {
+    fontFamily: "Inter_500Medium",
     fontSize: 12,
     color: C.textSub,
     fontWeight: "500",
@@ -585,6 +594,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   serviceBtnLabel: {
+    fontFamily: "Inter_500Medium",
     fontSize: 12,
     color: C.textSub,
     fontWeight: "500",
@@ -603,11 +613,13 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   nudgeTitle: {
+    fontFamily: "Inter_700Bold",
     fontSize: 14,
     fontWeight: "700",
     color: C.contrast_text,
   },
   nudgeSub: {
+    fontFamily: "Inter_400Regular",
     fontSize: 12,
     color: C.textSub,
     lineHeight: 18,
@@ -636,11 +648,13 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   xpLabel: {
+    fontFamily: "Inter_500Medium",
     fontSize: 11,
     color: C.textSub,
     fontWeight: "500",
   },
   xpValue: {
+    fontFamily: "Inter_800ExtraBold",
     fontSize: 20,
     fontWeight: "800",
     color: C.text,
@@ -654,6 +668,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   recentTitle: {
+    fontFamily: "Inter_700Bold",
     fontSize: 16,
     fontWeight: "700",
     color: C.contrast_text,
@@ -664,6 +679,7 @@ const styles = StyleSheet.create({
     gap: 2,
   },
   viewAllText: {
+    fontFamily: "Inter_600SemiBold",
     fontSize: 13,
     color: C.purple,
     fontWeight: "600",
@@ -680,11 +696,13 @@ const styles = StyleSheet.create({
     borderColor: C.cardBorder,
   },
   emptyTitle: {
+    fontFamily: "Inter_600SemiBold",
     fontSize: 14,
     fontWeight: "600",
     color: C.textSub,
   },
   emptySub: {
+    fontFamily: "Inter_400Regular",
     fontSize: 12,
     color: C.textDim,
   },
@@ -705,6 +723,7 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   tabLabel: {
+    fontFamily: "Inter_600SemiBold",
     fontSize: 11,
     fontWeight: "600",
   },

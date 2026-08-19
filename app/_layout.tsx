@@ -1,6 +1,6 @@
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
-import { ActivityIndicator, View, Text } from "react-native";
+import { ActivityIndicator, View, Text, TextInput } from "react-native";
 import {
   Inter_100Thin,
   Inter_200ExtraLight,
@@ -16,6 +16,11 @@ import {
 (Text as any).defaultProps = {
   ...((Text as any).defaultProps || {}),
   style: [{ fontFamily: "Inter_400Regular" }, (Text as any).defaultProps?.style].flat(),
+};
+
+(TextInput as any).defaultProps = {
+  ...((TextInput as any).defaultProps || {}),
+  style: [{ fontFamily: "Inter_400Regular" }, (TextInput as any).defaultProps?.style].flat(),
 };
 
 export default function RootLayout() {
