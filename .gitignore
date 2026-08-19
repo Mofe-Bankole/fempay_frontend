@@ -36,6 +36,9 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
+# local Claude session artifacts
+claude_session.txt
+
 app-example
 
 # generated native folders
