@@ -28,9 +28,13 @@ import {
   Tag,
   Wallet,
   Eye,
+  Wifi,
 } from "lucide-react";
 import { useRouter } from "expo-router";
 import { useTransferStore } from "../../../store/transfer";
+import { useBillsStore } from "../../../store/bills";
+import { useAirtimeStore } from "../../../store/airtime";
+import { useDataStore } from "../../../store/data";
 
 const { width } = Dimensions.get("window");
 
@@ -137,14 +141,17 @@ function XPCard({
 export default function HomeScreen() {
   const router = useRouter();
   const resetTransfer = useTransferStore((s) => s.reset);
+  const resetBills = useBillsStore((s) => s.reset);
+  const resetAirtime = useAirtimeStore((s) => s.reset);
+  const resetData = useDataStore((s) => s.reset);
   const [activeTab, setActiveTab] = useState("Home");
   const [hiddenbalance, sethiddenBalance] = useState(false);
   const hideBalance = function () {
     sethiddenBalance(!hiddenbalance);
   };
-  const tabs = [
+  const tabs: { label: string; icon: any; route?: string }[] = [
     { label: "Home", icon: Home },
-    { label: "Offers", icon: Tag },
+    { label: "Offers", icon: Tag, route: "/rewards/page" },
     { label: "Saving", icon: PiggyBank },
     { label: "Me", icon: User },
   ];
@@ -236,8 +243,30 @@ export default function HomeScreen() {
               }}
             />
             <QuickActionButton icon={QrCode} label="Pay" />
-            <QuickActionButton icon={Phone} label="Airtime" />
-            <QuickActionButton icon={FileText} label="Bills" />
+            <QuickActionButton
+              icon={Phone}
+              label="Airtime"
+              onPress={() => {
+                resetAirtime();
+                router.push("/airtime/page" as any);
+              }}
+            />
+            <QuickActionButton
+              icon={Wifi}
+              label="Data"
+              onPress={() => {
+                resetData();
+                router.push("/data/page" as any);
+              }}
+            />
+            <QuickActionButton
+              icon={FileText}
+              label="Bills"
+              onPress={() => {
+                resetBills();
+                router.push("/bills/page" as any);
+              }}
+            />
           </View>
         </View>
 
@@ -315,13 +344,19 @@ export default function HomeScreen() {
 
       {/* ── Bottom tab bar ── */}
       <View style={styles.tabBar}>
-        {tabs.map(({ label, icon: Icon }) => {
+        {tabs.map(({ label, icon: Icon, route }) => {
           const active = activeTab === label;
           return (
             <TouchableOpacity
               key={label}
               style={styles.tabItem}
-              onPress={() => setActiveTab(label)}
+              onPress={() => {
+                if (route) {
+                  router.push(route as any);
+                } else {
+                  setActiveTab(label);
+                }
+              }}
               activeOpacity={0.75}
             >
               <Icon
