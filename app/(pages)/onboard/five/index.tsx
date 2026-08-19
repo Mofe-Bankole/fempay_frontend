@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import "../../../../global.css";
 import { ArrowLeft, House, Phone } from "lucide-react";
 import { useRouter } from "expo-router";
-import { TextInput } from "react-native";
+import { AppTextInput } from "../../../../components/FocusField";
 
 export default function OnboardFour() {
   const router = useRouter();
@@ -38,33 +38,33 @@ export default function OnboardFour() {
             <Text className="text-[0.9rem] text-white font-bold">
               Avg Monthly Allowance
             </Text>
-            <TextInput
+            <AppTextInput
               placeholder="#"
-              className="px-5 py-3 border border-purple-500 outline-none rounded-xl"
+              fieldClassName="px-5 py-3" radius={12}
             />
           </View>
           <View className="flex flex-col space-y-3">
             <Text className="text-[0.9rem] text-white font-bold">Street</Text>
-            <TextInput
+            <AppTextInput
               placeholder="Odegbayi Close"
-              className="px-5 py-3 border border-purple-500 outline-none rounded-xl"
+              fieldClassName="px-5 py-3" radius={12}
             />
           </View>
           {/*<View className="flex flex-row space-x-6">
             <View className="flex flex-col space-y-3">
               <Text className="text-[0.9rem] text-white font-bold">State</Text>
-              <TextInput
+              <AppTextInput
                 placeholder="Lagos State"
-                className="px-5 py-3 border border-purple-500 outline-none rounded-xl"
+                fieldClassName="px-5 py-3" radius={12}
               />
             </View>
             <View className="flex flex-col space-y-3">
               <Text className="text-[0.9rem] text-white font-bold">
                 Postal Code
               </Text>
-              <TextInput
+              <AppTextInput
                 placeholder="200130"
-                className="px-5 py-3 border border-purple-500 outline-none rounded-xl"
+                fieldClassName="px-5 py-3" radius={12}
               />
             </View>
           </View>*/}

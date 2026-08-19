@@ -3,7 +3,7 @@ import "../../../../global.css";
 import { ArrowLeft, Phone } from "lucide-react";
 import { useRouter } from "expo-router";
 import { LabelText } from "../identity-verification";
-import { TextInput } from "react-native";
+import { AppTextInput } from "../../../../components/FocusField";
 
 export default function OnboardOne() {
   const router = useRouter();
@@ -42,9 +42,9 @@ export default function OnboardOne() {
               Mobile Number
             </Text>
             <View className="flex flex-col space-y-2">
-              <TextInput
+              <AppTextInput
                 placeholder="James Gray"
-                className="px-5 py-3 border border-[2.5px] border-purple-500 outline-none rounded-xl"
+                fieldClassName="px-5 py-3" radius={12}
               />
             </View>
           </View>

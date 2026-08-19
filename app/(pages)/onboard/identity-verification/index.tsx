@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import "../../../../global.css";
 import { ArrowLeft, Phone, User } from "lucide-react";
 import { useRouter } from "expo-router";
-import { TextInput } from "react-native";
+import { AppTextInput } from "../../../../components/FocusField";
 
 export function LabelText({ text }: { text: string }) {
   return <Text className="text-[0.9rem] text-gray-500 font-bold">{text}</Text>;
@@ -45,53 +45,53 @@ export default function OnboardOne() {
 
           <View className="flex flex-col space-y-2">
             <LabelText text="Full Name" />
-            <TextInput
+            <AppTextInput
               placeholder="James Gray"
-              className="px-5 py-3 border border-[2.5px] border-purple-500 outline-none rounded-xl"
+              fieldClassName="px-5 py-3" radius={12}
             />
           </View>
           <View className="flex flex-col space-y-2">
             <LabelText text="Nickname" />
-            <TextInput
+            <AppTextInput
               placeholder="Jray"
-              className="px-5 py-3 border border-[2.5px] border-purple-500 outline-none rounded-xl"
+              fieldClassName="px-5 py-3" radius={12}
             />
           </View>
           <View className="flex flex-col space-y-2">
             <LabelText text="Email Address" />
-            <TextInput
+            <AppTextInput
               placeholder="jamesgray122@gmail.com"
-              className="px-5 py-3 border border-[2.5px] border-purple-500 outline-none rounded-xl"
+              fieldClassName="px-5 py-3" radius={12}
             />
           </View>
           <View className="flex flex-row justify-between space-x-[5%]">
             <View className="flex flex-col space-y-2 w-[45%]">
               <LabelText text="Date Of Birth" />
-              <TextInput
+              <AppTextInput
                 placeholder="DD/MM/YYYY"
-                className="px-5 py-3 border border-[2.5px] border-purple-500 outline-none rounded-xl"
+                fieldClassName="px-5 py-3" radius={12}
               />
             </View>
             <View className="flex flex-col space-y-2 w-[45%]">
               <LabelText text="Gender" />
-              <TextInput
+              <AppTextInput
                 placeholder="#"
-                className="px-5 py-3 border border-[2.5px] border-purple-500 outline-none rounded-xl"
+                fieldClassName="px-5 py-3" radius={12}
               />
             </View>
           </View>
           <View className="flex flex-col space-y-2">
             <LabelText text="University" />
-            <TextInput
+            <AppTextInput
               placeholder="Enter your University"
-              className="px-5 py-3 border border-[2.5px] border-purple-500 outline-none rounded-xl"
+              fieldClassName="px-5 py-3" radius={12}
             />
           </View>
           <View className="flex flex-col space-y-2">
             <LabelText text="Monthly Income" />
-            <TextInput
+            <AppTextInput
               placeholder="₦30,000"
-              className="px-5 py-3 border border-[2.5px] border-purple-500 outline-none rounded-xl"
+              fieldClassName="px-5 py-3" radius={12}
             />
           </View>
           <View className="flex flex-row income_buttons grid grid-cols-2 gap-y-4 gap-x-4">

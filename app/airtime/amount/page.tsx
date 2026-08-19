@@ -15,6 +15,7 @@ import { useAirtimeStore } from "../../../store/airtime";
 import { NetworkBadge } from "../../../components/NetworkBadge";
 import { ConfirmSheet } from "../../../components/topup/ConfirmSheet";
 import { ReceiptModal } from "../../../components/topup/ReceiptModal";
+import { FocusField, AppTextInput } from "../../../components/FocusField";
 import "../../../global.css";
 
 const QUICK_AMOUNTS = [50, 100, 200, 500, 1000, 2000];
@@ -130,14 +131,15 @@ export default function AirtimeAmountScreen() {
           <Text className="text-[13px] font-medium text-[#1c1c1e] mb-2">
             Phone Number
           </Text>
-          <TextInput
+          <AppTextInput
             value={phone}
             onChangeText={(t) => setPhone(t.replace(/[^\d]/g, ""))}
             keyboardType="phone-pad"
             maxLength={11}
             placeholder="0803 000 0000"
             placeholderTextColor="#b0b0b5"
-            className="bg-white rounded-2xl px-4 py-4 text-[16px] text-[#1c1c1e] border-[0.5px] border-black/6"
+            fieldClassName="bg-white px-4 py-4"
+            className="text-[16px] text-[#1c1c1e]"
           />
         </View>
 
@@ -146,17 +148,24 @@ export default function AirtimeAmountScreen() {
           <Text className="text-[13px] font-medium text-[#1c1c1e] mb-2">
             Amount
           </Text>
-          <View className="flex-row items-center bg-white rounded-2xl px-4 border-[0.5px] border-black/6">
-            <Text className="text-[24px] font-bold text-[#1c1c1e] mr-1">₦</Text>
-            <TextInput
-              value={amount}
-              onChangeText={(t) => setLocalAmount(t.replace(/[^\d]/g, ""))}
-              keyboardType="number-pad"
-              placeholder="0"
-              placeholderTextColor="#b0b0b5"
-              className="flex-1 py-4 text-[24px] font-bold text-[#1c1c1e]"
-            />
-          </View>
+          <FocusField className="flex-row items-center bg-white px-4">
+            {(fp) => (
+              <>
+                <Text className="text-[24px] font-bold text-[#1c1c1e] mr-1">
+                  ₦
+                </Text>
+                <TextInput
+                  value={amount}
+                  onChangeText={(t) => setLocalAmount(t.replace(/[^\d]/g, ""))}
+                  keyboardType="number-pad"
+                  placeholder="0"
+                  placeholderTextColor="#b0b0b5"
+                  className="flex-1 py-4 text-[24px] font-bold text-[#1c1c1e]"
+                  {...fp}
+                />
+              </>
+            )}
+          </FocusField>
         </View>
 
         {/* Quick amount chips */}

@@ -19,6 +19,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { useTransferStore } from "../../store/transfer";
+import { FocusField, AppTextInput } from "../../components/FocusField";
 import "../../global.css";
 
 const BANKS = [
@@ -130,16 +131,21 @@ export default function SendMoneyScreen() {
 
       {/* Search */}
       <View className="px-5 mb-3">
-        <View className="flex-row items-center gap-2 bg-white rounded-2xl px-3.5 py-3 border-[0.5px] border-black/8">
-          <Search size={16} color="#aeaeb2" />
-          <TextInput
-            className="flex-1 text-sm text-[#1c1c1e] p-0"
-            placeholder="Search Bank…"
-            placeholderTextColor="#aeaeb2"
-            value={search}
-            onChangeText={setSearch}
-          />
-        </View>
+        <FocusField className="flex-row items-center gap-2 bg-white px-3.5 py-3">
+          {(fp) => (
+            <>
+              <Search size={16} color="#aeaeb2" />
+              <TextInput
+                className="flex-1 text-sm text-[#1c1c1e] p-0"
+                placeholder="Search Bank…"
+                placeholderTextColor="#aeaeb2"
+                value={search}
+                onChangeText={setSearch}
+                {...fp}
+              />
+            </>
+          )}
+        </FocusField>
       </View>
 
       {/* Bank list */}
@@ -183,8 +189,10 @@ export default function SendMoneyScreen() {
                   <Text className="text-[11px] font-semibold text-[#8e8e93] uppercase tracking-[0.5px] mb-2">
                     Account Number
                   </Text>
-                  <TextInput
-                    className="text-sm text-[#1c1c1e] p-0 border-b border-black/10 pb-2"
+                  <AppTextInput
+                    fieldClassName="px-3 py-2.5"
+                    className="text-sm text-[#1c1c1e]"
+                    radius={12}
                     placeholder="Enter account number"
                     placeholderTextColor="#aeaeb2"
                     keyboardType="number-pad"

@@ -7,7 +7,6 @@ import {
   SafeAreaView,
   StatusBar,
   ScrollView,
-  TextInput,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
@@ -15,6 +14,7 @@ import { useDataStore, DATA_PLANS, type DataPlan } from "../../../store/data";
 import { NetworkBadge } from "../../../components/NetworkBadge";
 import { ConfirmSheet } from "../../../components/topup/ConfirmSheet";
 import { ReceiptModal } from "../../../components/topup/ReceiptModal";
+import { AppTextInput } from "../../../components/FocusField";
 import "../../../global.css";
 
 const MONTHS = [
@@ -128,14 +128,15 @@ export default function DataPlanScreen() {
           <Text className="text-[13px] font-medium text-[#1c1c1e] mb-2">
             Phone Number
           </Text>
-          <TextInput
+          <AppTextInput
             value={phone}
             onChangeText={(t) => setPhone(t.replace(/[^\d]/g, ""))}
             keyboardType="phone-pad"
             maxLength={11}
             placeholder="0803 000 0000"
             placeholderTextColor="#b0b0b5"
-            className="bg-white rounded-2xl px-4 py-4 text-[16px] text-[#1c1c1e] border-[0.5px] border-black/6"
+            fieldClassName="bg-white px-4 py-4"
+            className="text-[16px] text-[#1c1c1e]"
           />
         </View>
 
