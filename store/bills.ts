@@ -7,17 +7,28 @@ export type BillProvider = {
   name: string;
 };
 
+export type CablePlan = {
+  id: string;
+  name: string;
+  subtitle: string;
+  price: number;
+};
+
 type BillsStore = {
   category: BillCategory | null;
   selectedProvider: BillProvider | null;
   meterNumber: string;
   phoneNumber: string;
+  smartcardNumber: string;
   amount: string;
+  selectedPlan: CablePlan | null;
   setCategory: (category: BillCategory | null) => void;
   setSelectedProvider: (provider: BillProvider | null) => void;
   setMeterNumber: (meterNumber: string) => void;
   setPhoneNumber: (phoneNumber: string) => void;
+  setSmartcardNumber: (smartcardNumber: string) => void;
   setAmount: (amount: string) => void;
+  setSelectedPlan: (plan: CablePlan | null) => void;
   reset: () => void;
 };
 
@@ -26,18 +37,24 @@ export const useBillsStore = create<BillsStore>((set) => ({
   selectedProvider: { id: "ei", name: "Ikeja Electricity" },
   meterNumber: "08012345678",
   phoneNumber: "08012345678",
+  smartcardNumber: "08012345678",
   amount: "1000",
+  selectedPlan: null,
   setCategory: (category) => set({ category }),
   setSelectedProvider: (provider) => set({ selectedProvider: provider }),
   setMeterNumber: (meterNumber) => set({ meterNumber }),
   setPhoneNumber: (phoneNumber) => set({ phoneNumber }),
+  setSmartcardNumber: (smartcardNumber) => set({ smartcardNumber }),
   setAmount: (amount) => set({ amount }),
+  setSelectedPlan: (selectedPlan) => set({ selectedPlan }),
   reset: () =>
     set({
       category: null,
       selectedProvider: null,
       meterNumber: "",
       phoneNumber: "",
+      smartcardNumber: "",
       amount: "",
+      selectedPlan: null,
     }),
 }));

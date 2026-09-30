@@ -1,4 +1,4 @@
-import { ChevronLeft, Zap } from "lucide-react";
+import { ChevronLeft, Zap, Tv } from "lucide-react";
 import React from "react";
 import {
   View,
@@ -18,10 +18,18 @@ import "../../../global.css";
 
 const PROVIDERS: Record<
   BillCategory,
-  { iconColor?: string; items: BillProvider[] }
+  { emoji?: string; icon?: string; items: BillProvider[] }
 > = {
+  cable: {
+    emoji: "📺",
+    items: [
+      { id: "dstv", name: "DStv" },
+      { id: "gotv", name: "GOtv" },
+      { id: "startimes", name: "StarTimes" },
+    ],
+  },
   electricity: {
-    iconColor: "#F59E0B",
+    icon: "zap",
     items: [
       { id: "ei", name: "Ikeja Electricity (EI)" },
       { id: "ekedc", name: "Eko Electricity (EKEDC)" },
@@ -30,17 +38,8 @@ const PROVIDERS: Record<
       { id: "ibedc", name: "Ibadan Electricity (IBEDC)" },
     ],
   },
-  cable: {
-    iconColor: "#7C3AED",
-    items: [
-      { id: "dstv", name: "DStv" },
-      { id: "gotv", name: "GOtv" },
-      { id: "startimes", name: "StarTimes" },
-      { id: "showmax", name: "Showmax" },
-    ],
-  },
   internet: {
-    iconColor: "#1FB6A6",
+    emoji: "📶",
     items: [
       { id: "spectranet", name: "Spectranet" },
       { id: "smile", name: "Smile" },
@@ -50,7 +49,7 @@ const PROVIDERS: Record<
     ],
   },
   water: {
-    iconColor: "#3B82F6",
+    emoji: "💧",
     items: [
       { id: "lwc", name: "Lagos Water Corporation" },
       { id: "fctwb", name: "FCT Water Board" },
@@ -70,7 +69,11 @@ export default function SelectProviderScreen() {
 
   const handleSelectProvider = (item: BillProvider) => {
     setSelectedProvider(item);
-    router.push("/bills/amount/page" as any);
+    if (category === "cable") {
+      router.push("/bills/cable/page" as any);
+    } else {
+      router.push("/bills/amount/page" as any);
+    }
   };
 
   return (
@@ -113,12 +116,16 @@ export default function SelectProviderScreen() {
               activeOpacity={0.75}
               onPress={() => handleSelectProvider(item)}
             >
-              <Zap
-                size={22}
-                color="#F59E0B"
-                fill="#F59E0B"
-                strokeWidth={1.5}
-              />
+              {category === "cable" ? (
+                <Text className="text-[22px]">📺</Text>
+              ) : (
+                <Zap
+                  size={22}
+                  color="#F59E0B"
+                  fill="#F59E0B"
+                  strokeWidth={1.5}
+                />
+              )}
               <Text className="flex-1 text-[16px] font-semibold text-[#1c1c1e]">
                 {item.name}
               </Text>
