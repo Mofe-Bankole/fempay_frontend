@@ -100,14 +100,20 @@ function ServiceButton({
   label,
   iconColor,
   bgColor,
+  onPress,
 }: {
   icon: React.ElementType;
   label: string;
   iconColor: string;
   bgColor: string;
+  onPress?: () => void;
 }) {
   return (
-    <TouchableOpacity style={styles.serviceBtn} activeOpacity={0.75}>
+    <TouchableOpacity
+      style={styles.serviceBtn}
+      activeOpacity={0.75}
+      onPress={onPress}
+    >
       <View style={[styles.serviceBtnIcon, { backgroundColor: bgColor }]}>
         <Icon size={22} color={iconColor} strokeWidth={1.8} />
       </View>
@@ -296,11 +302,16 @@ export default function HomeScreen() {
               label="Insight"
               iconColor={C.gold}
               bgColor={C.goldMuted}
+              onPress={() => router.push("/insight/page" as any)}
             />
           </View>
 
           {/* Spending limit nudge */}
-          <TouchableOpacity style={styles.nudgeCard} activeOpacity={0.8}>
+          <TouchableOpacity
+            style={styles.nudgeCard}
+            activeOpacity={0.8}
+            onPress={() => router.push("/insight/page" as any)}
+          >
             <View style={styles.nudgeContent}>
               <Text style={styles.nudgeTitle}>Set a weekly spending limit</Text>
               <Text style={styles.nudgeSub}>
