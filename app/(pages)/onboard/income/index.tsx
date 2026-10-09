@@ -4,7 +4,7 @@ import { ArrowLeft, House, Phone } from "lucide-react";
 import { useRouter } from "expo-router";
 import { AppTextInput } from "../../../../components/FocusField";
 
-export default function OnboardFour() {
+export default function OnboardIncome() {
   const router = useRouter();
   return (
     <View className="min-h-screen justify-between bg-[#0A0320] flex flex-col text-white px-8 py-4">
@@ -71,8 +71,11 @@ export default function OnboardFour() {
         </View>
       </View>
 
-      <TouchableOpacity className="rounded-lg bg-purple-600 py-4 items-center justify-center w-full">
-        <Text className="text-white text-[1rem] font-bold">Next</Text>
+      <TouchableOpacity
+        className="rounded-lg bg-purple-600 py-4 items-center justify-center w-full"
+        onPress={() => router.push("/(pages)/home/home")}
+      >
+        <Text className="text-white text-[1rem] font-bold">Complete</Text>
       </TouchableOpacity>
     </View>
   );

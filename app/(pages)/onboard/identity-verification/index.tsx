@@ -8,7 +8,7 @@ export function LabelText({ text }: { text: string }) {
   return <Text className="text-[0.9rem] text-gray-500 font-bold">{text}</Text>;
 }
 
-export default function OnboardOne() {
+export default function OnboardIdentityVerification() {
   const router = useRouter();
   return (
     <ScrollView
@@ -112,7 +112,7 @@ export default function OnboardOne() {
       </View>
 
       <TouchableOpacity
-        onPress={() => router.push("/(pages)/onboard/four")}
+        onPress={() => router.push("/(pages)/onboard/income")}
         className="rounded-lg bg-purple-600 py-4 mt-4 items-center justify-center w-full"
       >
         <Text className="text-white text-[1rem] font-bold">Next</Text>

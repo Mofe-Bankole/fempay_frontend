@@ -1,5 +1,5 @@
-import WelcomeOne from "./(pages)/welcome/one";
+import WelcomeIntro from "./(pages)/welcome/intro";
 
 export default function Home() {
-  return <WelcomeOne />;
+  return <WelcomeIntro />;
 }

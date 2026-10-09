@@ -10,7 +10,7 @@ export default function Index() {
       <Text className="text-2xl mb-6 text-white">How will you use Fempay?</Text>
 
       <TouchableOpacity
-        onPress={() => router.push("/(pages)/onboard/one")}
+        onPress={() => router.push("/(pages)/onboard/phone")}
         className="w-full px-3 py-3 flex flex-row border-purple-600 border-[5px] rounded-lg items-center mb-5"
       >
         <View className="mr-4">

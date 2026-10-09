@@ -3,7 +3,7 @@ import "../../../global.css";
 import { ArrowRight } from "lucide-react";
 import { useRouter } from "expo-router";
 
-export default function WelcomeFour() {
+export default function WelcomeTransfers() {
   const router = useRouter();
   return (
     <View className="min-h-screen bg-[#0A0320] flex flex-col items-center justify-center">
@@ -13,18 +13,18 @@ export default function WelcomeFour() {
       />
       <View className="mx-auto text-center items-center px-5">
         <Text className="text-white text-4xl text-center mb-4 font-bold">
-          Your money is protected with bank-level security
+          Send and receive money instantly in Nigeria
         </Text>
         <Text className="text-white text-center text-[15px] mb-14">
-          256-bit encryption, biometrics login and fraud protection
+          Fast, free transfers to any bank for FemPay user
         </Text>
 
         <TouchableOpacity
-          onPress={() => router.push("/(pages)/questionnaire")}
+          onPress={() => router.push("/(pages)/welcome/spending")}
           className="mb-5 w-full py-6 rounded-2xl bg-purple-500 flex items-center justify-center"
         >
           <View className="flex-row items-center justify-center gap-2">
-            <Text className="text-xl text-white">Create Account</Text>
+            <Text className="text-xl text-white">Next</Text>
             <ArrowRight color="white" />
           </View>
         </TouchableOpacity>

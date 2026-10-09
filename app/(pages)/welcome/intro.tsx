@@ -3,7 +3,7 @@ import "../../../global.css";
 import { ArrowRight } from "lucide-react";
 import { useRouter } from "expo-router";
 
-export default function WelcomeOne() {
+export default function WelcomeIntro() {
   const router = useRouter();
   return (
     <View className="min-h-screen bg-[#0A0320] flex flex-col items-center justify-center px-5">
@@ -21,7 +21,7 @@ export default function WelcomeOne() {
       </View>
 
       <TouchableOpacity
-        onPress={() => router.push("/(pages)/welcome/two")}
+        onPress={() => router.push("/(pages)/welcome/transfers")}
         className="mt-14 w-full py-6 rounded-2xl bg-purple-500 flex items-center justify-center"
       >
         <View className="flex-row items-center justify-center gap-2">
