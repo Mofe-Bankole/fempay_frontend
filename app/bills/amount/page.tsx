@@ -14,7 +14,7 @@ import {
 import { useRouter } from "expo-router";
 import { useBillsStore } from "../../../store/bills";
 import { ElectricityConfirmSheet } from "../../../components/bills/ElectricityConfirmSheet";
-import { ReceiptModal } from "../../../components/topup/ReceiptModal";
+import { BillReceiptModal } from "../../../components/bills/BillReceiptModal";
 import "../../../global.css";
 
 const MONTHS = [
@@ -194,22 +194,22 @@ export default function ElectricityAmountScreen() {
         onConfirm={handleConfirmPay}
       />
 
-      {/* Success Receipt Modal */}
-      <ReceiptModal
-        visible={!!receipt}
-        title="Electricity Payment Successful"
-        amount={`₦${cleanAmount.toLocaleString()}`}
-        xpText="+15 XP earned 🎉"
-        rows={[
-          { label: "Provider", value: providerName },
-          { label: "Meter Number", value: phone },
-          { label: "Token / Units", value: receipt?.token ?? "", highlight: true },
-          { label: "Reference", value: receipt?.ref ?? "" },
-          { label: "Date", value: receipt?.date ?? "" },
-          { label: "Status", value: "Successful", highlight: true },
-        ]}
-        onDone={handleDone}
-      />
+      {/* Transaction Receipt Modal */}
+      {receipt && (
+        <BillReceiptModal
+          visible={!!receipt}
+          amount={`₦${cleanAmount.toLocaleString()}`}
+          serviceType="Bill Payment"
+          to={phone}
+          cardOrMeterNumber={phone}
+          description={providerName}
+          date={receipt.date}
+          reference={receipt.ref}
+          status="Successful"
+          xpText="+50 XP earned 🎉"
+          onDone={handleDone}
+        />
+      )}
     </SafeAreaView>
   );
 }

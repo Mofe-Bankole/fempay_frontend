@@ -14,7 +14,7 @@ import {
 import { useRouter } from "expo-router";
 import { useBillsStore, type CablePlan } from "../../../store/bills";
 import { CableConfirmSheet } from "../../../components/bills/CableConfirmSheet";
-import { ReceiptModal } from "../../../components/topup/ReceiptModal";
+import { BillReceiptModal } from "../../../components/bills/BillReceiptModal";
 import "../../../global.css";
 
 const CABLE_PLANS: Record<string, CablePlan[]> = {
@@ -309,22 +309,22 @@ export default function CablePlanScreen() {
         />
       )}
 
-      {/* Success Receipt Modal */}
-      <ReceiptModal
-        visible={!!receipt}
-        title="Cable TV Subscription Successful"
-        amount={`₦${(selectedPlan?.price || 0).toLocaleString()}`}
-        xpText="+5 XP earned 🎉"
-        rows={[
-          { label: "Provider", value: providerName },
-          { label: "Smartcard / IUC", value: smartcard },
-          { label: "Plan", value: selectedPlan?.name ?? "" },
-          { label: "Reference", value: receipt?.ref ?? "" },
-          { label: "Date", value: receipt?.date ?? "" },
-          { label: "Status", value: "Successful", highlight: true },
-        ]}
-        onDone={handleDone}
-      />
+      {/* Transaction Receipt Modal */}
+      {selectedPlan && receipt && (
+        <BillReceiptModal
+          visible={!!receipt}
+          amount={`₦${(selectedPlan?.price || 0).toLocaleString()}`}
+          serviceType="Bill Payment"
+          to={smartcard}
+          cardOrMeterNumber={smartcard}
+          description={selectedPlan.name}
+          date={receipt.date}
+          reference={receipt.ref}
+          status="Successful"
+          xpText="+50 XP earned 🎉"
+          onDone={handleDone}
+        />
+      )}
     </SafeAreaView>
   );
 }
