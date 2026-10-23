@@ -35,18 +35,21 @@ const MONTHS = [
 export default function ElectricityAmountScreen() {
   const router = useRouter();
   const {
+    category,
+    customerReference,
+    setCustomerReference,
     selectedProvider,
     meterNumber: storedMeter,
-    phoneNumber: storedPhone,
     amount: storedAmount,
     setMeterNumber,
-    setPhoneNumber,
     setAmount,
     reset,
   } = useBillsStore();
 
-  const [phone, setPhone] = useState(storedPhone || "08012345678");
-  const [amount, setLocalAmount] = useState(storedAmount || "1000");
+  const isWater = category === "water";
+  const identifierLabel = isWater ? "Customer Reference" : "Meter Number";
+  const [phone, setPhone] = useState(isWater ? customerReference : storedMeter);
+  const [amount, setLocalAmount] = useState(storedAmount);
   const [showConfirm, setShowConfirm] = useState(false);
   const [receipt, setReceipt] = useState<{
     ref: string;
@@ -56,15 +59,15 @@ export default function ElectricityAmountScreen() {
 
   const providerName = selectedProvider?.name
     ? selectedProvider.name.replace(/\s*\([A-Z]+\)$/, "")
-    : "Ikeja Electricity";
+    : isWater ? "Lagos Water Corporation" : "Ikeja Electricity";
 
   const cleanAmount = Number(amount.replace(/[^0-9]/g, "") || "0");
   const canContinue = phone.trim().length >= 8 && cleanAmount > 0;
 
   const handleNext = () => {
     if (!canContinue) return;
-    setPhoneNumber(phone);
-    setMeterNumber(phone);
+    if (isWater) setCustomerReference(phone);
+    else setMeterNumber(phone);
     setAmount(amount);
     setShowConfirm(true);
   };
@@ -122,7 +125,7 @@ export default function ElectricityAmountScreen() {
 
           {/* Provider pill indicator */}
           <View className="flex-row items-center gap-2 px-5 mt-4 mb-6">
-            <Zap size={20} color="#F59E0B" fill="#F59E0B" strokeWidth={1.5} />
+            {isWater ? <Text className="text-[20px]">💧</Text> : <Zap size={20} color="#F59E0B" fill="#F59E0B" strokeWidth={1.5} />}
             <Text className="text-[16px] font-semibold text-[#1c1c1e]">
               {providerName}
             </Text>
@@ -133,13 +136,14 @@ export default function ElectricityAmountScreen() {
             {/* Phone / Meter Number */}
             <View className="mb-5">
               <Text className="text-[14px] font-medium text-[#4B5563] mb-2">
-                Phone Number
+                {identifierLabel}
               </Text>
               <View className="bg-white rounded-2xl border border-[#D1D1D6] px-4 py-3.5">
                 <TextInput
+                  accessibilityLabel={identifierLabel}
                   value={phone}
                   onChangeText={(val) => setPhone(val.replace(/[^\d]/g, ""))}
-                  placeholder="08012345678"
+                  placeholder="Enter Number"
                   placeholderTextColor="#9ca3af"
                   keyboardType="phone-pad"
                   className="text-[16px] text-[#1c1c1e] p-0 font-medium"
@@ -161,7 +165,7 @@ export default function ElectricityAmountScreen() {
                   onChangeText={(val) =>
                     setLocalAmount(val.replace(/[^\d]/g, ""))
                   }
-                  placeholder="1000"
+                  placeholder="0"
                   placeholderTextColor="#9ca3af"
                   keyboardType="number-pad"
                   className="flex-1 text-[16px] text-[#1c1c1e] p-0 font-medium"
@@ -189,6 +193,8 @@ export default function ElectricityAmountScreen() {
         amount={amount}
         providerName={providerName}
         meterNumber={phone}
+        identifierLabel={identifierLabel}
+        isWater={isWater}
         walletBalance="₦100,000"
         onClose={() => setShowConfirm(false)}
         onConfirm={handleConfirmPay}

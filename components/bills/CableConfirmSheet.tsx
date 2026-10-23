@@ -18,6 +18,9 @@ export function CableConfirmSheet({
   amount,
   providerName,
   smartcardNumber,
+  identifierLabel = "Smartcard / IUC Number",
+  providerEmoji = "📺",
+  serviceLabel = "Cable TV",
   planName,
   walletBalance = "₦100,000",
   onClose,
@@ -27,6 +30,9 @@ export function CableConfirmSheet({
   amount: number | string;
   providerName: string;
   smartcardNumber: string;
+  identifierLabel?: string;
+  providerEmoji?: string;
+  serviceLabel?: string;
   planName: string;
   walletBalance?: string;
   onClose: () => void;
@@ -103,7 +109,7 @@ export function CableConfirmSheet({
           <View className="flex-row items-center justify-between py-2 border-b border-black/5">
             <Text className="text-[14px] text-[#8e8e93]">Provider</Text>
             <View className="flex-row items-center gap-1.5">
-              <Text className="text-[16px]">📺</Text>
+              <Text className="text-[16px]">{providerEmoji}</Text>
               <Text className="text-[14px] font-semibold text-[#1c1c1e]">
                 {providerName}
               </Text>
@@ -113,7 +119,7 @@ export function CableConfirmSheet({
           {/* Smartcard / IUC Number */}
           <View className="flex-row items-center justify-between py-2 border-b border-black/5">
             <Text className="text-[14px] text-[#8e8e93]">
-              Smartcard / IUC Number
+              {identifierLabel}
             </Text>
             <Text className="text-[14px] font-semibold text-[#1c1c1e]">
               {smartcardNumber}
@@ -137,7 +143,7 @@ export function CableConfirmSheet({
             </View>
             <View>
               <Text className="text-[13px] font-medium text-[#4B5563]">
-                {providerName}/ Cable TV
+                {providerName}/ {serviceLabel}
               </Text>
               <Text className="text-[15px] font-extrabold text-[#D97706]">
                 +5 XP

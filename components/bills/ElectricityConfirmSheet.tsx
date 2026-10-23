@@ -18,6 +18,8 @@ export function ElectricityConfirmSheet({
   amount,
   providerName,
   meterNumber,
+  identifierLabel = "Meter Number",
+  isWater = false,
   walletBalance = "₦100,000",
   onClose,
   onConfirm,
@@ -26,6 +28,8 @@ export function ElectricityConfirmSheet({
   amount: string;
   providerName: string;
   meterNumber: string;
+  identifierLabel?: string;
+  isWater?: boolean;
   walletBalance?: string;
   onClose: () => void;
   onConfirm: () => void;
@@ -101,7 +105,7 @@ export function ElectricityConfirmSheet({
           <View className="flex-row items-center justify-between py-2 border-b border-black/5">
             <Text className="text-[14px] text-[#8e8e93]">Provider</Text>
             <View className="flex-row items-center gap-1.5">
-              <Zap size={15} color="#F59E0B" fill="#F59E0B" strokeWidth={1.5} />
+              {isWater ? <Text>💧</Text> : <Zap size={15} color="#F59E0B" fill="#F59E0B" strokeWidth={1.5} />}
               <Text className="text-[14px] font-semibold text-[#1c1c1e]">
                 {providerName}
               </Text>
@@ -110,7 +114,7 @@ export function ElectricityConfirmSheet({
 
           {/* Meter Number */}
           <View className="flex-row items-center justify-between pt-2">
-            <Text className="text-[14px] text-[#8e8e93]">Meter Number</Text>
+            <Text className="text-[14px] text-[#8e8e93]">{identifierLabel}</Text>
             <Text className="text-[14px] font-semibold text-[#1c1c1e]">
               {meterNumber}
             </Text>
@@ -125,7 +129,7 @@ export function ElectricityConfirmSheet({
             </View>
             <View>
               <Text className="text-[13px] font-medium text-[#4B5563]">
-                Electricity Bill
+                {isWater ? "Water Bill" : "Electricity Bill"}
               </Text>
               <Text className="text-[15px] font-extrabold text-[#D97706]">
                 +15 XP

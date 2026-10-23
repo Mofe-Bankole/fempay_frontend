@@ -1,4 +1,4 @@
-import { ChevronLeft, Zap, Tv } from "lucide-react";
+import { ChevronLeft, Zap } from "lucide-react";
 import React from "react";
 import {
   View,
@@ -39,13 +39,12 @@ const PROVIDERS: Record<
     ],
   },
   internet: {
-    emoji: "📶",
+    emoji: "🌐",
     items: [
       { id: "spectranet", name: "Spectranet" },
-      { id: "smile", name: "Smile" },
-      { id: "swift", name: "Swift Networks" },
+      { id: "smile", name: "Smile communication" },
+      { id: "swift", name: "Swift Network" },
       { id: "ipnx", name: "ipNX" },
-      { id: "mtn", name: "MTN Broadband" },
     ],
   },
   water: {
@@ -53,8 +52,6 @@ const PROVIDERS: Record<
     items: [
       { id: "lwc", name: "Lagos Water Corporation" },
       { id: "fctwb", name: "FCT Water Board" },
-      { id: "rswsc", name: "Rivers State Water" },
-      { id: "knswb", name: "Kano State Water Board" },
     ],
   },
 };
@@ -64,13 +61,17 @@ export default function SelectProviderScreen() {
   const category = useBillsStore((s) => s.category) ?? "electricity";
   const selectedProvider = useBillsStore((s) => s.selectedProvider);
   const setSelectedProvider = useBillsStore((s) => s.setSelectedProvider);
+  const setSelectedPlan = useBillsStore((s) => s.setSelectedPlan);
 
   const group = PROVIDERS[category] ?? PROVIDERS.electricity;
 
   const handleSelectProvider = (item: BillProvider) => {
     setSelectedProvider(item);
+    setSelectedPlan(null);
     if (category === "cable") {
       router.push("/bills/cable/page" as any);
+    } else if (category === "internet") {
+      router.push("/bills/internet/page" as any);
     } else {
       router.push("/bills/amount/page" as any);
     }
@@ -116,8 +117,8 @@ export default function SelectProviderScreen() {
               activeOpacity={0.75}
               onPress={() => handleSelectProvider(item)}
             >
-              {category === "cable" ? (
-                <Text className="text-[22px]">📺</Text>
+              {group.emoji ? (
+                <Text className="text-[22px]">{group.emoji}</Text>
               ) : (
                 <Zap
                   size={22}

@@ -1,4 +1,5 @@
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { View, Text, Image, TouchableOpacity, SafeAreaView, ScrollView, Alert, StatusBar } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import "../../../global.css";
 import { ArrowRight } from "lucide-react";
 import { useRouter } from "expo-router";
@@ -6,29 +7,38 @@ import { useRouter } from "expo-router";
 export default function WelcomeIntro() {
   const router = useRouter();
   return (
-    <View className="min-h-screen bg-[#0A0320] flex flex-col items-center justify-center px-5">
+    <SafeAreaView className="flex-1 bg-white">
+      <StatusBar barStyle="dark-content" />
+      <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: "center", padding: 16 }}>
       <Image
         source={require("../../../public/images/rafiki.png")}
-        className="mb-[1.2rem]"
+        accessibilityLabel="Welcome to FemPay"
+        resizeMode="contain"
+        style={{ width: "100%", height: 273, marginBottom: 32 }}
       />
       <View className="mx-auto text-center items-center">
-        <Text className="text-white text-4xl text-center mb-4 font-bold">
-          Welcome to the Future of Smart Finance
+        <Text className="text-black text-[26px] text-center mb-4 font-bold">
+          Welcome to the future of smart finance
         </Text>
-        <Text className="text-white text-center text-lg">
+        <Text className="text-black text-center text-[15px]">
           FemPay - Your campus financial companion
         </Text>
       </View>
 
       <TouchableOpacity
         onPress={() => router.push("/(pages)/welcome/transfers")}
-        className="mt-14 w-full py-6 rounded-2xl bg-purple-500 flex items-center justify-center"
+        accessibilityRole="button"
+        className="mt-14 w-full"
       >
-        <View className="flex-row items-center justify-center gap-2">
-          <Text className="text-xl text-white">Get Started</Text>
-          <ArrowRight color="white" />
-        </View>
+        <LinearGradient colors={["#7C3AED", "#A855F7"]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={{ height: 60, borderRadius: 20, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 12 }}>
+          <Text className="text-[15px] font-bold text-white">Get Started</Text>
+          <ArrowRight size={18} color="white" />
+        </LinearGradient>
       </TouchableOpacity>
-    </View>
+      <TouchableOpacity accessibilityRole="button" onPress={() => Alert.alert("Login unavailable", "Account login is not connected yet.")} className="min-h-11 items-center justify-center mt-1">
+        <Text className="text-black text-xs">I already have an account - <Text className="text-[#7C3AED] font-bold">Login</Text></Text>
+      </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
   );
 }

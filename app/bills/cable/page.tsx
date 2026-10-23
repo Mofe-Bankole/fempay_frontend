@@ -131,9 +131,20 @@ const MONTHS = [
   "December",
 ];
 
+// Prototype plans specified in the Internet Figma flow, not live provider quotes.
+const INTERNET_PLANS: CablePlan[] = [
+  { id: "flex", name: "Flex 7GB", subtitle: "7GB / 30 Days", price: 2950 },
+  { id: "swift", name: "Swift 12GB", subtitle: "12GB / 30 Days", price: 5100 },
+  { id: "pro", name: "Pro 25GB", subtitle: "25GB / 30 Days", price: 9300 },
+  { id: "ultra", name: "Ultra 50GB", subtitle: "50GB / 30 Days", price: 15700 },
+];
+
 export default function CablePlanScreen() {
   const router = useRouter();
   const {
+    category,
+    accountId,
+    setAccountId,
     selectedProvider,
     smartcardNumber: storedSmartcard,
     selectedPlan: storedPlan,
@@ -142,14 +153,16 @@ export default function CablePlanScreen() {
     reset,
   } = useBillsStore();
 
+  const isInternet = category === "internet";
+  const identifierLabel = isInternet ? "Account ID" : "Smartcard / IUC number";
   const providerKey = selectedProvider?.id || "dstv";
-  const providerName = selectedProvider?.name || "DStv";
+  const providerName = selectedProvider?.name || (isInternet ? "Spectranet" : "DStv");
 
-  const plans = CABLE_PLANS[providerKey] ?? CABLE_PLANS.dstv;
+  const plans = isInternet ? INTERNET_PLANS : CABLE_PLANS[providerKey] ?? CABLE_PLANS.dstv;
 
-  const [smartcard, setSmartcard] = useState(storedSmartcard || "08012345678");
+  const [smartcard, setSmartcard] = useState(isInternet ? accountId : storedSmartcard);
   const [selectedPlan, setLocalPlan] = useState<CablePlan | null>(
-    storedPlan || plans[1] // Default to DStv Yanga as shown in Image 4
+    plans.find((plan) => plan.id === storedPlan?.id) ?? null
   );
   const [isFocused, setIsFocused] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -162,7 +175,8 @@ export default function CablePlanScreen() {
 
   const handleContinue = () => {
     if (!canContinue || !selectedPlan) return;
-    setSmartcardNumber(smartcard);
+    if (isInternet) setAccountId(smartcard);
+    else setSmartcardNumber(smartcard);
     setSelectedPlan(selectedPlan);
     setShowConfirm(true);
   };
@@ -215,7 +229,7 @@ export default function CablePlanScreen() {
 
           {/* Provider row */}
           <View className="flex-row items-center gap-2 px-5 mt-3 mb-5">
-            <Text className="text-[20px]">📺</Text>
+            <Text className="text-[20px]">{isInternet ? "🌐" : "📺"}</Text>
             <Text className="text-[16px] font-semibold text-[#1c1c1e]">
               {providerName}
             </Text>
@@ -224,7 +238,7 @@ export default function CablePlanScreen() {
           {/* Input field */}
           <View className="px-5 mb-5">
             <Text className="text-[14px] font-medium text-[#4B5563] mb-2">
-              Smartcard / IUC number
+              {identifierLabel}
             </Text>
             <View
               className={`bg-white rounded-2xl px-4 py-3.5 ${
@@ -234,6 +248,7 @@ export default function CablePlanScreen() {
               }`}
             >
               <TextInput
+                accessibilityLabel={identifierLabel}
                 value={smartcard}
                 onChangeText={(val) => setSmartcard(val.replace(/[^\d]/g, ""))}
                 onFocus={() => setIsFocused(true)}
@@ -302,6 +317,9 @@ export default function CablePlanScreen() {
           amount={selectedPlan.price}
           providerName={providerName}
           smartcardNumber={smartcard}
+          identifierLabel={identifierLabel}
+          providerEmoji={isInternet ? "🌐" : "📺"}
+          serviceLabel={isInternet ? "Internet" : "Cable TV"}
           planName={selectedPlan.name}
           walletBalance="₦100,000"
           onClose={() => setShowConfirm(false)}

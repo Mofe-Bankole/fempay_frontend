@@ -20,6 +20,8 @@ type BillsStore = {
   meterNumber: string;
   phoneNumber: string;
   smartcardNumber: string;
+  customerReference: string;
+  accountId: string;
   amount: string;
   selectedPlan: CablePlan | null;
   setCategory: (category: BillCategory | null) => void;
@@ -27,6 +29,8 @@ type BillsStore = {
   setMeterNumber: (meterNumber: string) => void;
   setPhoneNumber: (phoneNumber: string) => void;
   setSmartcardNumber: (smartcardNumber: string) => void;
+  setCustomerReference: (customerReference: string) => void;
+  setAccountId: (accountId: string) => void;
   setAmount: (amount: string) => void;
   setSelectedPlan: (plan: CablePlan | null) => void;
   reset: () => void;
@@ -38,6 +42,8 @@ export const useBillsStore = create<BillsStore>((set) => ({
   meterNumber: "08012345678",
   phoneNumber: "08012345678",
   smartcardNumber: "08012345678",
+  customerReference: "",
+  accountId: "",
   amount: "1000",
   selectedPlan: null,
   setCategory: (category) => set({ category }),
@@ -45,6 +51,8 @@ export const useBillsStore = create<BillsStore>((set) => ({
   setMeterNumber: (meterNumber) => set({ meterNumber }),
   setPhoneNumber: (phoneNumber) => set({ phoneNumber }),
   setSmartcardNumber: (smartcardNumber) => set({ smartcardNumber }),
+  setCustomerReference: (customerReference) => set({ customerReference }),
+  setAccountId: (accountId) => set({ accountId }),
   setAmount: (amount) => set({ amount }),
   setSelectedPlan: (selectedPlan) => set({ selectedPlan }),
   reset: () =>
@@ -54,6 +62,8 @@ export const useBillsStore = create<BillsStore>((set) => ({
       meterNumber: "",
       phoneNumber: "",
       smartcardNumber: "",
+      customerReference: "",
+      accountId: "",
       amount: "",
       selectedPlan: null,
     }),

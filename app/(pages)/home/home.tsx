@@ -1,140 +1,160 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  View,
-  Text,
+  Alert,
+  Platform,
   ScrollView,
-  TouchableOpacity,
-  StyleSheet,
-  SafeAreaView,
   StatusBar,
-  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import {
-  Send,
-  QrCode,
-  Phone,
-  FileText,
-  ArrowLeftRight,
-  PiggyBank,
-  MapPin,
-  TrendingUp,
-  Zap,
-  Bell,
-  User,
-  ArrowUpRight,
-  ChevronRight,
-  BadgeCheck,
-  Home,
-  Tag,
-  Wallet,
-  Eye,
-  Wifi,
-} from "lucide-react";
+import { Image } from "expo-image";
+import * as Clipboard from "expo-clipboard";
 import { useRouter } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { EyeOff } from "lucide-react";
 import { useTransferStore } from "../../../store/transfer";
 import { useBillsStore } from "../../../store/bills";
 import { useAirtimeStore } from "../../../store/airtime";
-import { useDataStore } from "../../../store/data";
 
-const { width } = Dimensions.get("window");
+// Figma Home, node 1883:48. Assets are local exports, not temporary Figma URLs.
+const ICONS = {
+  student: require("../../../assets/images/home/student.svg"),
+  profile: require("../../../assets/images/home/profile.svg"),
+  bell: require("../../../assets/images/home/bell.svg"),
+  verified: require("../../../assets/images/home/verified.svg"),
+  copy: require("../../../assets/images/home/copy.svg"),
+  eye: require("../../../assets/images/home/eye.svg"),
+  send: require("../../../assets/images/home/send.svg"),
+  pay: require("../../../assets/images/home/qr-pay.svg"),
+  airtime: require("../../../assets/images/home/airtime.svg"),
+  bills: require("../../../assets/images/home/bills.svg"),
+  transact: require("../../../assets/images/home/transact.svg"),
+  savings: require("../../../assets/images/home/savings.svg"),
+  merchants: require("../../../assets/images/home/merchants.svg"),
+  insight: require("../../../assets/images/home/insight.svg"),
+  xp: require("../../../assets/images/home/xp.svg"),
+  xpWallet: require("../../../assets/images/home/xp-wallet.svg"),
+  xpSavings: require("../../../assets/images/home/xp-savings.svg"),
+  activity: require("../../../assets/images/home/empty-activity.svg"),
+  arrow: require("../../../assets/images/home/arrow-right.svg"),
+  home: require("../../../assets/images/home/tab-home.svg"),
+  offers: require("../../../assets/images/home/tab-offers.svg"),
+  saving: require("../../../assets/images/home/tab-savings.svg"),
+  me: require("../../../assets/images/home/tab-profile.svg"),
+};
+type IconName = keyof typeof ICONS;
 
-// ─── Colour tokens ───────────────────────────────────────────────
 const C = {
   bg: "#F5F6F8",
-  card: "#16161F",
-  cardBorder: "#2A2A38",
-  purple: "#7C5CFC",
-  purpleLight: "#9B7FFF",
-  purpleMuted: "rgba(124,92,252,0.15)",
-  green: "#4ADE80",
-  greenMuted: "rgba(74,222,128,0.15)",
-  gold: "#F59E0B",
-  goldMuted: "rgba(245,158,11,0.15)",
-  contrast_text: "#000000",
-  text: "#FFFFFF",
-  textSub: "#9090A8",
-  textDim: "#5A5A72",
-  progressBg: "#2A2A38",
-  verified: "#22C55E",
-  tabActive: "#7C5CFC",
-  tabInactive: "#5A5A72",
-  surface: "#1C1C28",
+  hero: "#0A0320",
+  white: "#FFFFFF",
+  black: "#000000",
+  muted: "#808080",
+  border: "rgba(0,0,0,0.2)",
+  purple: "#A855F7",
+  purpleMuted: "rgba(168,85,247,0.2)",
+  greenMuted: "rgba(34,197,94,0.2)",
+  blueMuted: "rgba(39,39,255,0.2)",
+  goldMuted: "rgba(255,199,39,0.2)",
+  translucentWhite: "rgba(255,255,255,0.1)",
 };
+const ACCOUNT_NUMBER = "123456789";
 
-// ─── Reusable atoms ──────────────────────────────────────────────
-
-function VerifiedBadge() {
+function HomeIcon({
+  name,
+  size,
+  width = size,
+}: {
+  name: IconName;
+  size: number;
+  width?: number;
+}) {
   return (
-    <View style={styles.verifiedBadge}>
-      <BadgeCheck size={11} color={C.verified} strokeWidth={2.5} />
-      <Text style={styles.verifiedText}>Verified</Text>
-    </View>
+    <Image
+      source={ICONS[name]}
+      style={{ width, height: size }}
+      contentFit="contain"
+      accessible={false}
+    />
   );
 }
 
-function QuickActionButton({
-  icon: Icon,
+function QuickAction({
+  icon,
   label,
   onPress,
+  offset = 0,
 }: {
-  icon: React.ElementType;
+  icon: IconName;
   label: string;
-  onPress?: () => void;
+  onPress: () => void;
+  offset?: number;
 }) {
   return (
     <TouchableOpacity
-      style={styles.quickAction}
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      style={[styles.quickAction, { transform: [{ translateX: offset }] }]}
       onPress={onPress}
       activeOpacity={0.75}
     >
       <View style={styles.quickActionIcon}>
-        <Icon size={20} color={C.text} strokeWidth={1.8} />
+        <HomeIcon name={icon} size={31} />
       </View>
-      <Text style={styles.quickActionLabel}>{label}</Text>
+      <Text
+        style={[
+          styles.quickActionLabel,
+          icon === "send" && { transform: [{ translateX: -3 }] },
+        ]}
+      >
+        {label}
+      </Text>
     </TouchableOpacity>
   );
 }
 
 function ServiceButton({
-  icon: Icon,
+  icon,
   label,
-  iconColor,
-  bgColor,
+  backgroundColor,
   onPress,
+  offset = 0,
 }: {
-  icon: React.ElementType;
+  icon: IconName;
   label: string;
-  iconColor: string;
-  bgColor: string;
-  onPress?: () => void;
+  backgroundColor: string;
+  onPress: () => void;
+  offset?: number;
 }) {
   return (
     <TouchableOpacity
-      style={styles.serviceBtn}
-      activeOpacity={0.75}
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      style={[styles.serviceButton, { transform: [{ translateX: offset }] }]}
       onPress={onPress}
+      activeOpacity={0.75}
     >
-      <View style={[styles.serviceBtnIcon, { backgroundColor: bgColor }]}>
-        <Icon size={22} color={iconColor} strokeWidth={1.8} />
+      <View style={[styles.serviceIcon, { backgroundColor }]}>
+        <HomeIcon name={icon} size={30} />
       </View>
-      <Text style={styles.serviceBtnLabel}>{label}</Text>
+      <Text style={styles.serviceLabel}>{label}</Text>
     </TouchableOpacity>
   );
 }
 
 function XPCard({
-  icon: Icon,
-  iconColor,
-  bgColor,
+  icon,
+  backgroundColor,
 }: {
-  icon: React.ElementType;
-  iconColor: string;
-  bgColor: string;
+  icon: IconName;
+  backgroundColor: string;
 }) {
   return (
     <View style={styles.xpCard}>
-      <View style={[styles.xpIcon, { backgroundColor: bgColor }]}>
-        <Icon size={16} color={iconColor} strokeWidth={2} />
+      <View style={[styles.xpIcon, { backgroundColor }]}>
+        <HomeIcon name={icon} size={18} />
       </View>
       <Text style={styles.xpLabel}>XP Points</Text>
       <Text style={styles.xpValue}>0</Text>
@@ -142,599 +162,645 @@ function XPCard({
   );
 }
 
-// ─── Main Screen ─────────────────────────────────────────────────
-
 export default function HomeScreen() {
   const router = useRouter();
-  const resetTransfer = useTransferStore((s) => s.reset);
-  const resetBills = useBillsStore((s) => s.reset);
-  const resetAirtime = useAirtimeStore((s) => s.reset);
-  const resetData = useDataStore((s) => s.reset);
-  const [activeTab, setActiveTab] = useState("Home");
-  const [hiddenbalance, sethiddenBalance] = useState(false);
-  const hideBalance = function () {
-    sethiddenBalance(!hiddenbalance);
+  const insets = useSafeAreaInsets();
+  const resetTransfer = useTransferStore((state) => state.reset);
+  const resetBills = useBillsStore((state) => state.reset);
+  const resetAirtime = useAirtimeStore((state) => state.reset);
+  const [balanceHidden, setBalanceHidden] = useState(false);
+  const [accountCopied, setAccountCopied] = useState(false);
+
+  // The web preview reserves the design's status-bar space; native uses real insets.
+  const topInset =
+    Platform.OS === "web" ? Math.max(insets.top, 47) : insets.top;
+
+  useEffect(() => {
+    if (!accountCopied) return;
+    const timer = setTimeout(() => setAccountCopied(false), 2000);
+    return () => clearTimeout(timer);
+  }, [accountCopied]);
+
+  const unavailable = (feature: string) =>
+    Alert.alert(feature, "This feature is not available yet.");
+  const openTransfer = () => {
+    resetTransfer();
+    router.push("/transfer/page");
   };
-  const tabs: { label: string; icon: any; route?: string }[] = [
-    { label: "Home", icon: Home },
-    { label: "Offers", icon: Tag, route: "/rewards/page" },
-    { label: "Saving", icon: PiggyBank },
-    { label: "Me", icon: User },
+  const copyAccount = async () => {
+    try {
+      const copied = await Clipboard.setStringAsync(ACCOUNT_NUMBER);
+      if (!copied) throw new Error("Clipboard unavailable");
+      setAccountCopied(true);
+    } catch {
+      Alert.alert(
+        "Unable to copy",
+        "Please select and copy the account number instead.",
+      );
+    }
+  };
+  const tabs: {
+    label: string;
+    icon: IconName;
+    offset: number;
+    onPress: () => void;
+  }[] = [
+    { label: "Home", icon: "home", offset: -0.25, onPress: () => {} },
+    {
+      label: "Offers",
+      icon: "offers",
+      offset: -1.75,
+      onPress: () => router.push("/rewards/page"),
+    },
+    {
+      label: "Saving",
+      icon: "saving",
+      offset: -0.25,
+      onPress: () => unavailable("Savings"),
+    },
+    {
+      label: "Me",
+      icon: "me",
+      offset: 5.25,
+      onPress: () => unavailable("My Profile"),
+    },
   ];
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <StatusBar barStyle="light-content" />
-
-      <ScrollView
-        style={styles.scroll}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* ── Hero card ── */}
-        <View style={styles.hero} className="bg-[#0A0320]">
-          {/* Header row */}
-          <View style={styles.headerRow}>
-            <View style={styles.avatarWrap}>
+    <View style={styles.page}>
+      <StatusBar barStyle="light-content" backgroundColor={C.hero} />
+      <View style={styles.screen}>
+        <ScrollView
+          style={styles.scroll}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}
+        >
+          <View style={[styles.hero, { paddingTop: topInset + 16 }]}>
+            <View style={styles.headerRow}>
               <View style={styles.avatar}>
-                <User size={20} color={C.purpleLight} strokeWidth={1.8} />
+                <HomeIcon name="student" size={32} />
+              </View>
+              <View style={styles.greetingBlock}>
+                <Text style={styles.greetingSmall}>Welcome Back</Text>
+                <View style={styles.greetingRow}>
+                  <Text style={styles.greetingName}>Nifemi 👋</Text>
+                  <View style={styles.verifiedBadge}>
+                    <HomeIcon name="verified" size={11} width={10} />
+                    <Text style={styles.verifiedText}>Verified</Text>
+                  </View>
+                </View>
+              </View>
+              <View style={styles.headerIcons}>
+                <TouchableOpacity
+                  accessibilityRole="button"
+                  accessibilityLabel="Notifications, unread updates"
+                  style={styles.headerButton}
+                  onPress={() => unavailable("Notifications")}
+                >
+                  <HomeIcon name="bell" size={28} />
+                  <View style={styles.notificationDot} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  accessibilityRole="button"
+                  accessibilityLabel="My Profile"
+                  style={styles.headerButton}
+                  onPress={() => unavailable("My Profile")}
+                >
+                  <HomeIcon name="profile" size={28} />
+                </TouchableOpacity>
               </View>
             </View>
 
-            <View style={styles.greetingBlock}>
-              <Text style={styles.greetingSmall}>Welcome Back</Text>
-              <View style={styles.greetingRow}>
-                <Text style={styles.greetingName}>Nifemi 👋</Text>
-                <VerifiedBadge />
-              </View>
-            </View>
-
-            <View style={styles.headerIcons}>
-              <TouchableOpacity
-                style={styles.headerIconBtn}
-                activeOpacity={0.7}
-              >
-                <Bell size={20} color={C.text} strokeWidth={1.8} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.headerIconBtn}
-                activeOpacity={0.7}
-              >
-                <User size={20} color={C.text} strokeWidth={1.8} />
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          {/* Wallet balance card */}
-          <View style={styles.walletCard}>
-            <View style={styles.walletCardTop}>
+            <View style={styles.walletCard}>
               <Text style={styles.walletLabel}>Wallet Balance</Text>
-              <Text style={styles.walletId}>123456789</Text>
-            </View>
-
-            <View style={styles.balanceRow}>
-              <Text style={styles.balanceAmount}>
-                {hiddenbalance ? "*****" : "#30000"}
-              </Text>
-              <TouchableOpacity style={styles.eyeBtn} activeOpacity={0.7}>
-                <Eye
-                  size={16}
-                  color={C.textSub}
-                  strokeWidth={1.8}
-                  onClick={() => hideBalance()}
-                />
+              <TouchableOpacity
+                accessibilityRole="button"
+                accessibilityLabel="Copy account number"
+                accessibilityHint={ACCOUNT_NUMBER}
+                onPress={copyAccount}
+                style={styles.accountButton}
+              >
+                <HomeIcon name="copy" size={15} />
+                <Text selectable style={styles.walletId}>
+                  {ACCOUNT_NUMBER}
+                </Text>
               </TouchableOpacity>
-            </View>
-
-            {/* Progress bar */}
-            <View style={styles.progressBarBg}>
-              <View style={[styles.progressBarFill, { width: "30%" }]} />
-            </View>
-
-            <View style={styles.progressMeta}>
-              <Text style={styles.progressPct}>30% Spent</Text>
+              <Text style={styles.balanceAmount}>
+                {balanceHidden ? "*****" : "#100,000"}
+              </Text>
+              <TouchableOpacity
+                accessibilityRole="button"
+                accessibilityLabel={
+                  balanceHidden ? "Show balance" : "Hide balance"
+                }
+                onPress={() => setBalanceHidden((hidden) => !hidden)}
+                style={styles.eyeButton}
+              >
+                {balanceHidden ? (
+                  <EyeOff size={12} color="white" />
+                ) : (
+                  <HomeIcon name="eye" size={12} />
+                )}
+              </TouchableOpacity>
+              <View
+                style={styles.progressTrack}
+                accessibilityRole="progressbar"
+                accessibilityLabel="Allowance spent"
+                accessibilityValue={{ min: 0, max: 100, now: 0 }}
+              />
+              <Text style={styles.progressPercent}>0% Spent</Text>
               <Text style={styles.progressAllowance}>#100,000 allowance</Text>
             </View>
+
+            <View style={styles.quickActions}>
+              <QuickAction icon="send" label="Send" onPress={openTransfer} />
+              <QuickAction
+                icon="pay"
+                label="Pay"
+                offset={3}
+                onPress={() => unavailable("QR Pay")}
+              />
+              <QuickAction
+                icon="airtime"
+                label="Airtime"
+                offset={-1}
+                onPress={() => {
+                  resetAirtime();
+                  router.push("/airtime/page");
+                }}
+              />
+              <QuickAction
+                icon="bills"
+                label="Bills"
+                offset={-2}
+                onPress={() => {
+                  resetBills();
+                  router.push("/bills/page");
+                }}
+              />
+            </View>
           </View>
 
-          {/* Quick actions */}
-          <View style={styles.quickActions}>
-            <QuickActionButton
-              icon={Send}
-              label="Send"
-              onPress={() => {
-                resetTransfer();
-                router.push("/transfer/page" as any);
-              }}
-            />
-            <QuickActionButton icon={QrCode} label="Pay" />
-            <QuickActionButton
-              icon={Phone}
-              label="Airtime"
-              onPress={() => {
-                resetAirtime();
-                router.push("/airtime/page" as any);
-              }}
-            />
-            <QuickActionButton
-              icon={Wifi}
-              label="Data"
-              onPress={() => {
-                resetData();
-                router.push("/data/page" as any);
-              }}
-            />
-            <QuickActionButton
-              icon={FileText}
-              label="Bills"
-              onPress={() => {
-                resetBills();
-                router.push("/bills/page" as any);
-              }}
-            />
-          </View>
-        </View>
+          <View style={styles.body}>
+            <View style={styles.serviceRow}>
+              <ServiceButton
+                icon="transact"
+                label="Transact"
+                backgroundColor={C.purpleMuted}
+                onPress={openTransfer}
+              />
+              <ServiceButton
+                icon="savings"
+                label="Savings"
+                offset={5}
+                backgroundColor={C.greenMuted}
+                onPress={() => unavailable("Savings")}
+              />
+              <ServiceButton
+                icon="merchants"
+                label="Merchants"
+                offset={3}
+                backgroundColor={C.blueMuted}
+                onPress={() => unavailable("Campus Merchants")}
+              />
+              <ServiceButton
+                icon="insight"
+                label="Insight"
+                backgroundColor={C.goldMuted}
+                onPress={() => router.push("/insight/page")}
+              />
+            </View>
 
-        {/* ── Body ── */}
-        <View style={styles.body}>
-          {/* Service grid */}
-          <View style={styles.serviceRow}>
-            <ServiceButton
-              icon={ArrowLeftRight}
-              label="Transact"
-              iconColor={C.purple}
-              bgColor={C.purpleMuted}
-            />
-            <ServiceButton
-              icon={PiggyBank}
-              label="Savings"
-              iconColor={C.green}
-              bgColor={C.greenMuted}
-            />
-            <ServiceButton
-              icon={MapPin}
-              label="Merchants"
-              iconColor={C.purpleLight}
-              bgColor={C.purpleMuted}
-            />
-            <ServiceButton
-              icon={TrendingUp}
-              label="Insight"
-              iconColor={C.gold}
-              bgColor={C.goldMuted}
-              onPress={() => router.push("/insight/page" as any)}
-            />
-          </View>
-
-          {/* Spending limit nudge */}
-          <TouchableOpacity
-            style={styles.nudgeCard}
-            activeOpacity={0.8}
-            onPress={() => router.push("/insight/page" as any)}
-          >
-            <View style={styles.nudgeContent}>
+            <TouchableOpacity
+              accessibilityRole="button"
+              style={styles.nudgeCard}
+              activeOpacity={0.8}
+              onPress={() => router.push("/insight/page")}
+            >
               <Text style={styles.nudgeTitle}>Set a weekly spending limit</Text>
-              <Text style={styles.nudgeSub}>
+              <Text style={styles.nudgeSubtitle}>
                 Stay in control of your week, Tap to set yours
               </Text>
-            </View>
-          </TouchableOpacity>
-
-          {/* XP cards */}
-          <View style={styles.xpRow}>
-            <XPCard icon={Zap} iconColor={C.purple} bgColor={C.purpleMuted} />
-            <XPCard
-              icon={PiggyBank}
-              iconColor={C.green}
-              bgColor={C.greenMuted}
-            />
-            <XPCard
-              icon={PiggyBank}
-              iconColor={C.purpleLight}
-              bgColor={C.purpleMuted}
-            />
-          </View>
-
-          {/* Recent activities */}
-          <View style={styles.recentHeader}>
-            <Text style={styles.recentTitle}>Recent Activities</Text>
-            <TouchableOpacity style={styles.viewAllBtn} activeOpacity={0.7}>
-              <Text style={styles.viewAllText}>View All</Text>
-              <ChevronRight size={14} color={C.purple} strokeWidth={2.5} />
             </TouchableOpacity>
-          </View>
 
-          <View style={styles.emptyCard}>
-            <ArrowUpRight size={28} color={C.textDim} strokeWidth={1.5} />
-            <Text style={styles.emptyTitle}>No transactions yet</Text>
-            <Text style={styles.emptySub}>Start by making a transaction</Text>
-          </View>
-        </View>
-      </ScrollView>
+            <View style={styles.xpRow}>
+              <XPCard icon="xp" backgroundColor={C.purpleMuted} />
+              <XPCard icon="xpWallet" backgroundColor={C.greenMuted} />
+              <XPCard icon="xpSavings" backgroundColor={C.blueMuted} />
+            </View>
 
-      {/* ── Bottom tab bar ── */}
-      <View style={styles.tabBar}>
-        {tabs.map(({ label, icon: Icon, route }) => {
-          const active = activeTab === label;
-          return (
+            <View style={styles.recentHeader}>
+              <Text style={styles.recentTitle}>Recent Activities</Text>
+              <TouchableOpacity
+                accessibilityRole="button"
+                accessibilityLabel="View all transactions"
+                onPress={() => unavailable("Transaction history")}
+                style={styles.viewAllButton}
+              >
+                <Text style={styles.viewAllText}>View All</Text>
+                <HomeIcon name="arrow" size={22} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.emptyCard}>
+              <HomeIcon name="activity" size={30} />
+              <Text style={styles.emptyTitle}>No transactions yet</Text>
+              <Text style={styles.emptySubtitle}>
+                Start by making a transaction
+              </Text>
+            </View>
+          </View>
+        </ScrollView>
+
+        <View
+          style={[
+            styles.tabBar,
+            { paddingBottom: Math.max(22, insets.bottom) },
+          ]}
+          accessibilityRole="tablist"
+        >
+          {tabs.map(({ label, icon, offset, onPress }) => (
             <TouchableOpacity
               key={label}
-              style={styles.tabItem}
-              onPress={() => {
-                if (route) {
-                  router.push(route as any);
-                } else {
-                  setActiveTab(label);
-                }
-              }}
+              accessibilityRole="tab"
+              accessibilityLabel={label}
+              accessibilityState={{ selected: label === "Home" }}
+              style={[styles.tabItem, { transform: [{ translateX: offset }] }]}
+              onPress={onPress}
               activeOpacity={0.75}
             >
-              <Icon
-                size={22}
-                color={active ? C.tabActive : C.tabInactive}
-                strokeWidth={active ? 2.2 : 1.8}
-              />
+              <HomeIcon name={icon} size={30} />
               <Text
                 style={[
                   styles.tabLabel,
-                  { color: active ? C.tabActive : C.tabInactive },
+                  label === "Home" && styles.activeTabLabel,
                 ]}
               >
                 {label}
               </Text>
             </TouchableOpacity>
-          );
-        })}
+          ))}
+        </View>
+        {accountCopied && (
+          <View
+            pointerEvents="none"
+            style={[styles.copyToast, { top: topInset + 4 }]}
+          >
+            <Text
+              accessibilityRole="alert"
+              accessibilityLiveRegion="polite"
+              style={styles.copyToastText}
+            >
+              Account number copied
+            </Text>
+          </View>
+        )}
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
-// ─── Styles ──────────────────────────────────────────────────────
-
+// Fixed card/icon dimensions come from the 390 × 983 Figma frame. Rows stretch
+// horizontally and the body scrolls on shorter phones; native safe areas stay real.
+// Small row offsets preserve the source frame's deliberately uneven icon alignment.
 const styles = StyleSheet.create({
-  safe: {
+  page: { flex: 1, backgroundColor: C.bg },
+  screen: {
     flex: 1,
-    backgroundColor: "#F5F6F8",
-  },
-  scroll: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingBottom: 16,
-  },
-
-  // ── Hero ──
-  hero: {
+    width: "100%",
+    maxWidth: 480,
+    alignSelf: "center",
     backgroundColor: C.bg,
-    paddingHorizontal: 20,
-    paddingTop: 16,
-    paddingBottom: 24,
-    borderBottomLeftRadius: 28,
-    borderBottomRightRadius: 28,
+  },
+  scroll: { flex: 1 },
+  scrollContent: { flexGrow: 1 },
+  hero: {
+    backgroundColor: C.hero,
+    paddingHorizontal: 16,
+    paddingBottom: 36,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
   },
   headerRow: {
+    minHeight: 48,
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 20,
-  },
-  avatarWrap: {
-    marginRight: 12,
+    marginBottom: 21,
   },
   avatar: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
-    backgroundColor: C.purpleMuted,
+    width: 50,
+    height: 48,
+    borderRadius: 15,
+    backgroundColor: "rgba(255,255,255,0.3)",
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1,
-    borderColor: C.cardBorder,
+    marginRight: 8,
   },
-  greetingBlock: {
-    flex: 1,
-  },
+  greetingBlock: { flex: 1, paddingTop: 6, alignSelf: "stretch" },
   greetingSmall: {
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Inter_300Light",
     fontSize: 12,
-    color: C.textSub,
-    fontWeight: "400",
-    marginBottom: 2,
+    lineHeight: 15,
+    color: C.white,
+    marginBottom: 6,
   },
   greetingRow: {
     flexDirection: "row",
+    flexWrap: "wrap",
     alignItems: "center",
-    gap: 6,
+    columnGap: 5,
+    rowGap: 2,
   },
   greetingName: {
-    fontFamily: "Inter_700Bold",
+    fontFamily: "Inter_500Medium",
     fontSize: 16,
-    fontWeight: "700",
-    color: C.text,
+    lineHeight: 19,
+    color: C.white,
   },
   verifiedBadge: {
+    width: 64,
+    height: 13,
+    borderRadius: 30,
+    backgroundColor: "rgba(34,197,94,0.4)",
     flexDirection: "row",
     alignItems: "center",
-    gap: 3,
-    backgroundColor: "rgba(34,197,94,0.12)",
-    borderRadius: 20,
-    paddingHorizontal: 7,
-    paddingVertical: 3,
-    borderWidth: 1,
-    borderColor: "rgba(34,197,94,0.25)",
+    justifyContent: "center",
+    gap: 1,
   },
   verifiedText: {
-    fontFamily: "Inter_600SemiBold",
+    fontFamily: "Inter_300Light",
     fontSize: 10,
-    color: C.verified,
-    fontWeight: "600",
+    lineHeight: 12,
+    color: C.white,
   },
   headerIcons: {
     flexDirection: "row",
-    gap: 8,
+    alignSelf: "flex-start",
+    marginTop: -8,
+    marginRight: -5,
   },
-  headerIconBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 12,
-    backgroundColor: C.surface,
+  headerButton: {
+    width: 44,
+    height: 44,
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1,
-    borderColor: C.cardBorder,
   },
-
-  // Wallet card
+  notificationDot: {
+    position: "absolute",
+    width: 13,
+    height: 12,
+    borderRadius: 100,
+    backgroundColor: "#F00C0C",
+    top: 6,
+    right: 9,
+  },
   walletCard: {
-    backgroundColor: C.card,
-    borderRadius: 20,
-    padding: 20,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: C.cardBorder,
-  },
-  walletCardTop: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 8,
+    height: 129,
+    marginLeft: -1,
+    backgroundColor: C.translucentWhite,
+    borderRadius: 25,
+    marginBottom: 19,
   },
   walletLabel: {
+    position: "absolute",
+    top: 15,
+    left: 18,
     fontFamily: "Inter_500Medium",
-    fontSize: 12,
-    color: C.textSub,
-    fontWeight: "500",
+    fontSize: 10,
+    lineHeight: 12,
+    color: C.white,
+    opacity: 0.6,
+  },
+  accountButton: {
+    position: "absolute",
+    top: 2.5,
+    right: 18,
+    minHeight: 40,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 1,
   },
   walletId: {
-    fontFamily: "Inter_400Regular",
+    width: 66,
+    fontFamily: "Inter_500Medium",
     fontSize: 12,
-    color: C.textSub,
-    fontWeight: "400",
-  },
-  balanceRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    marginBottom: 16,
+    lineHeight: 15,
+    color: C.white,
   },
   balanceAmount: {
+    position: "absolute",
+    top: 37,
+    left: 18,
     fontFamily: "Inter_800ExtraBold",
-    fontSize: 30,
-    fontWeight: "800",
-    color: C.text,
-    letterSpacing: -0.5,
+    fontSize: 25,
+    lineHeight: 30,
+    color: C.white,
   },
-  eyeBtn: {
-    padding: 4,
-  },
-  progressBarBg: {
-    height: 5,
-    backgroundColor: C.progressBg,
-    borderRadius: 99,
-    marginBottom: 8,
-    overflow: "hidden",
-  },
-  progressBarFill: {
-    height: "100%",
-    backgroundColor: C.purple,
-    borderRadius: 99,
-  },
-  progressMeta: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  progressPct: {
-    fontFamily: "Inter_400Regular",
-    fontSize: 11,
-    color: C.textSub,
-  },
-  progressAllowance: {
-    fontFamily: "Inter_400Regular",
-    fontSize: 11,
-    color: C.textSub,
-  },
-
-  // Quick actions
-  quickActions: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  quickAction: {
-    alignItems: "center",
-    gap: 8,
-  },
-  quickActionIcon: {
-    width: 56,
-    height: 56,
-    borderRadius: 18,
-    backgroundColor: C.surface,
+  eyeButton: {
+    position: "absolute",
+    top: 32,
+    left: 132,
+    width: 40,
+    height: 40,
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1,
-    borderColor: C.cardBorder,
+  },
+  progressTrack: {
+    position: "absolute",
+    top: 88,
+    left: 17,
+    right: 17,
+    height: 9,
+    borderRadius: 100,
+    backgroundColor: "rgba(255,255,255,0.2)",
+    opacity: 0.45,
+  },
+  progressPercent: {
+    position: "absolute",
+    top: 103,
+    left: 18,
+    fontFamily: "Inter_500Medium",
+    fontSize: 10,
+    lineHeight: 12,
+    color: C.white,
+    opacity: 0.6,
+  },
+  progressAllowance: {
+    position: "absolute",
+    top: 106,
+    right: 18,
+    fontFamily: "Inter_500Medium",
+    fontSize: 10,
+    lineHeight: 12,
+    color: C.white,
+    opacity: 0.6,
+  },
+  quickActions: { flexDirection: "row", justifyContent: "space-between" },
+  quickAction: { width: 69, alignItems: "center", gap: 5 },
+  quickActionIcon: {
+    width: 59,
+    height: 53,
+    borderRadius: 20,
+    backgroundColor: C.translucentWhite,
+    alignItems: "center",
+    justifyContent: "center",
   },
   quickActionLabel: {
     fontFamily: "Inter_500Medium",
     fontSize: 12,
-    color: C.textSub,
-    fontWeight: "500",
+    lineHeight: 15,
+    color: C.white,
   },
-
-  // ── Body ──
-  body: {
-    paddingHorizontal: 20,
-    paddingTop: 24,
-    gap: 16,
-  },
-
-  // Service grid
+  body: { paddingHorizontal: 16, paddingTop: 17, paddingBottom: 53 },
   serviceRow: {
     flexDirection: "row",
     justifyContent: "space-between",
+    marginBottom: 16,
   },
-  serviceBtn: {
-    alignItems: "center",
-    gap: 8,
-    flex: 1,
-  },
-  serviceBtnIcon: {
-    width: 56,
-    height: 56,
-    borderRadius: 18,
+  serviceButton: { width: 58, alignItems: "center", gap: 3 },
+  serviceIcon: {
+    width: 58,
+    height: 52,
+    borderRadius: 100,
     alignItems: "center",
     justifyContent: "center",
   },
-  serviceBtnLabel: {
-    fontFamily: "Inter_500Medium",
+  serviceLabel: {
+    fontFamily: "Inter_300Light",
     fontSize: 12,
-    color: C.textSub,
-    fontWeight: "500",
+    lineHeight: 15,
+    color: C.black,
   },
-
-  // Nudge card
   nudgeCard: {
-    borderWidth: 1.5,
-    borderColor: C.cardBorder,
+    minHeight: 71,
+    borderWidth: 1,
+    borderColor: "rgba(0,0,0,0.4)",
     borderStyle: "dashed",
-    borderRadius: 16,
-    padding: 16,
-    backgroundColor: "transparent",
-  },
-  nudgeContent: {
-    gap: 4,
+    borderRadius: 20,
+    paddingHorizontal: 13,
+    paddingTop: 15,
+    paddingBottom: 15,
+    backgroundColor: C.white,
+    marginBottom: 12,
   },
   nudgeTitle: {
-    fontFamily: "Inter_700Bold",
-    fontSize: 14,
-    fontWeight: "700",
-    color: C.contrast_text,
+    fontFamily: "Inter_500Medium",
+    fontSize: 13,
+    lineHeight: 16,
+    color: C.black,
+    marginBottom: 6,
   },
-  nudgeSub: {
-    fontFamily: "Inter_400Regular",
-    fontSize: 12,
-    color: C.textSub,
-    lineHeight: 18,
+  nudgeSubtitle: {
+    fontFamily: "Inter_500Medium",
+    fontSize: 13,
+    lineHeight: 16,
+    color: C.muted,
   },
-
-  // XP cards
-  xpRow: {
-    flexDirection: "row",
-    gap: 10,
-  },
+  xpRow: { flexDirection: "row", gap: 9, marginBottom: 10 },
   xpCard: {
     flex: 1,
-    backgroundColor: C.card,
-    borderRadius: 14,
-    padding: 14,
+    height: 103,
+    backgroundColor: C.white,
+    borderRadius: 20,
     borderWidth: 1,
-    borderColor: C.cardBorder,
-    gap: 6,
+    borderColor: C.border,
+    paddingHorizontal: 11,
+    paddingTop: 9,
   },
   xpIcon: {
-    width: 32,
-    height: 32,
-    borderRadius: 10,
+    width: 31,
+    height: 28,
+    borderRadius: 100,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 2,
+    marginBottom: 9,
   },
   xpLabel: {
     fontFamily: "Inter_500Medium",
-    fontSize: 11,
-    color: C.textSub,
-    fontWeight: "500",
+    fontSize: 12,
+    lineHeight: 15,
+    color: C.muted,
+    marginBottom: 8,
   },
   xpValue: {
-    fontFamily: "Inter_800ExtraBold",
-    fontSize: 20,
-    fontWeight: "800",
-    color: C.text,
+    fontFamily: "Inter_500Medium",
+    fontSize: 18,
+    lineHeight: 22,
+    color: C.black,
   },
-
-  // Recent activities
   recentHeader: {
+    minHeight: 22,
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    marginTop: 4,
+    justifyContent: "space-between",
+    marginBottom: 9,
   },
   recentTitle: {
-    fontFamily: "Inter_700Bold",
-    fontSize: 16,
-    fontWeight: "700",
-    color: C.contrast_text,
+    fontFamily: "Inter_500Medium",
+    fontSize: 15,
+    lineHeight: 18,
+    color: C.black,
   },
-  viewAllBtn: {
+  viewAllButton: {
     flexDirection: "row",
     alignItems: "center",
     gap: 2,
+    minHeight: 40,
+    marginVertical: -9,
+    marginRight: 2,
   },
   viewAllText: {
-    fontFamily: "Inter_600SemiBold",
-    fontSize: 13,
+    fontFamily: "Inter_500Medium",
+    fontSize: 14,
+    lineHeight: 17,
     color: C.purple,
-    fontWeight: "600",
   },
-
-  // Empty state
   emptyCard: {
-    backgroundColor: C.card,
-    borderRadius: 16,
-    padding: 36,
-    alignItems: "center",
-    gap: 8,
+    height: 124,
+    backgroundColor: C.white,
+    borderRadius: 20,
     borderWidth: 1,
-    borderColor: C.cardBorder,
+    borderColor: C.border,
+    paddingTop: 28,
+    alignItems: "center",
   },
   emptyTitle: {
-    fontFamily: "Inter_600SemiBold",
+    fontFamily: "Inter_500Medium",
     fontSize: 14,
-    fontWeight: "600",
-    color: C.textSub,
+    lineHeight: 17,
+    color: C.muted,
   },
-  emptySub: {
+  emptySubtitle: {
     fontFamily: "Inter_400Regular",
-    fontSize: 12,
-    color: C.textDim,
+    fontSize: 13,
+    lineHeight: 16,
+    color: C.muted,
+    marginTop: 3,
   },
-
-  // ── Tab bar ──
   tabBar: {
     flexDirection: "row",
-    backgroundColor: C.card,
-    paddingVertical: 10,
-    paddingHorizontal: 8,
-    borderTopWidth: 1,
-    borderTopColor: C.cardBorder,
+    backgroundColor: C.white,
+    paddingTop: 18,
+    paddingHorizontal: 6,
   },
-  tabItem: {
-    flex: 1,
-    alignItems: "center",
-    gap: 4,
-    paddingVertical: 4,
-  },
+  tabItem: { flex: 1, alignItems: "center" },
   tabLabel: {
-    fontFamily: "Inter_600SemiBold",
-    fontSize: 11,
-    fontWeight: "600",
+    fontFamily: "Inter_300Light",
+    fontSize: 12,
+    lineHeight: 17,
+    color: C.black,
   },
+  activeTabLabel: {
+    fontFamily: "Inter_500Medium",
+    fontSize: 14,
+    color: C.purple,
+  },
+  copyToast: {
+    position: "absolute",
+    alignSelf: "center",
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 12,
+    backgroundColor: C.white,
+  },
+  copyToastText: { fontFamily: "Inter_500Medium", fontSize: 12, color: C.hero },
 });
